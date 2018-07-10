@@ -1,0 +1,48 @@
+{
+  "name": "@threads/json-patch-ot",
+  "version": "1.0.0",
+  "description": "Library to reconcile JSON patch changes using Operational Transformation",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest --no-cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThreadsStyling/json-patch-ot.git"
+  },
+  "keywords": [
+    "json",
+    "patch",
+    "ot",
+    "operational",
+    "transformation"
+  ],
+  "author": "jasoniangreen@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThreadsStyling/json-patch-ot/issues"
+  },
+  "homepage": "https://github.com/ThreadsStyling/json-patch-ot#readme",
+  "devDependencies": {
+    "@threads/tslint": "^3.1.0",
+    "@types/jest": "^23.1.5",
+    "@types/node": "^10.5.2",
+    "jest": "^23.3.0",
+    "prettier": "^1.13.7",
+    "ts-jest": "^23.0.0",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {},
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "transformIgnorePatterns": [],
+    "testRegex": ".*/__tests__/.*\\.(test|spec)\\.ts$"
+  }
+}
