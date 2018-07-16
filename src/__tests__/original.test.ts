@@ -78,7 +78,6 @@ describe('JSONPatchOT', function() {
     });
 
     describe('an `move`, or `copy` operation with `from` that was equal, or descendant of replaced object', function() {
-      console.warn('may lead to trouble');
       const sequenceJSON: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.copy, path: '/separated/path/g', from: '/some/where'},
@@ -196,7 +195,6 @@ describe('JSONPatchOT', function() {
     });
 
     describe('an `move`, or `copy` operation with `from` that was equal, or descendant of replaced object', function() {
-      console.warn('may lead to trouble');
       const sequenceJSON: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.copy, path: '/separated/path/g', from: '/some/where'},

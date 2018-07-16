@@ -55,43 +55,22 @@ export type Operation =
   | OperationMove
   | OperationTest;
 
-const isValidIndex = function(str: string) {
-  const n = parseInt(str);
-  return n.toString() === str && n >= 0;
-};
-
-const replacePathIfHigher = function(path: string, repl: string, index: string): string {
-  const result = path.substr(repl.length);
-  let eoindex = result.indexOf('/');
-
-  eoindex > -1 || (eoindex = result.length);
-
-  const oldIndex = result.substr(0, eoindex);
-  const rest = result.substr(eoindex);
-
-  if (isValidIndex(oldIndex) && oldIndex > index) {
-    return repl + (parseInt(oldIndex) - 1) + rest;
-  } else {
-    return path;
-  }
-};
+import {isValidIndex, replacePathIfHigher} from './utils';
 
 const removeTransformer = function(acceptedOp: Operation, proposedOps: Operation[]): void {
-  let propChangesLen = proposedOps.length,
-    currentIndex = 0,
-    proposedOp;
-  // remove operation objects
+  let propChangesLen = proposedOps.length;
+  let currentIndex = 0;
+  let proposedOp;
+
   while ((proposedOp = proposedOps[currentIndex])) {
-    // TODO: `move`, and `copy` (`from`) may not be covered well (tomalec)
+    const matchesFromToPath =
+      proposedOp.from && (proposedOp.from === acceptedOp.path || proposedOp.from.indexOf(acceptedOp.path + '/') === 0);
+    const matchesPathToPath =
+      acceptedOp.path === proposedOp.path || proposedOp.path.indexOf(acceptedOp.path + '/') === 0;
+
     if ((proposedOp.op === 'add' || proposedOp.op === 'test') && acceptedOp.path === proposedOp.path) {
       // do nothing ? (tomalec)
-    }
-    // node in question was removed
-    else if (
-      (proposedOp.from &&
-        (proposedOp.from === acceptedOp.path || proposedOp.from.indexOf(acceptedOp.path + '/') === 0)) ||
-      (acceptedOp.path === proposedOp.path || proposedOp.path.indexOf(acceptedOp.path + '/') === 0)
-    ) {
+    } else if (matchesFromToPath || matchesPathToPath) {
       proposedOps.splice(currentIndex, 1);
       propChangesLen--;
       currentIndex--;
@@ -102,10 +81,11 @@ const removeTransformer = function(acceptedOp: Operation, proposedOps: Operation
   const lastSlash = acceptedOp.path.lastIndexOf('/');
 
   if (lastSlash > -1) {
-    var index = acceptedOp.path.substr(lastSlash + 1);
-    var arrayPath = acceptedOp.path.substr(0, lastSlash + 1);
+    const index = acceptedOp.path.substr(lastSlash + 1);
+    const arrayPath = acceptedOp.path.substr(0, lastSlash + 1);
+
     if (isValidIndex(index)) {
-      // Bug prone guessing that, as number given in path, this is an array
+      // Assumes that number given in path means this is an array
 
       // Shifting array indeces
       propChangesLen = proposedOps.length;
@@ -118,6 +98,7 @@ const removeTransformer = function(acceptedOp: Operation, proposedOps: Operation
           //item from the same array
           proposedOp.path = replacePathIfHigher(proposedOp.path, arrayPath, index);
         }
+
         if (proposedOp.from && proposedOp.from.indexOf(arrayPath) === 0) {
           //item from the same array
           proposedOp.from = replacePathIfHigher(proposedOp.from, arrayPath, index);
@@ -129,20 +110,18 @@ const removeTransformer = function(acceptedOp: Operation, proposedOps: Operation
 
 const replaceTransformer = function(acceptedOp: Operation, proposedOps: Operation[], options: Options) {
   const {proposedWinsOnEqualPath} = options;
-  let currentIndex = 0,
-    proposedOp;
-  // remove operation objects withing replaced JSON node
+  let currentIndex = 0;
+  let proposedOp;
+
+  // remove operation objects within replaced JSON node
   while ((proposedOp = proposedOps[currentIndex])) {
-    // TODO: `move`, and `copy` (`from`) may not be covered well (tomalec)
-    // node in question was removed
-    // IT:
-    // if( patchOp.path === originalOp.path || originalOp.path.indexOf(patchOp.path + "/") === 0 ){
-    if (
-      (proposedOp.from &&
-        (proposedOp.from === acceptedOp.path || proposedOp.from.indexOf(acceptedOp.path + '/') === 0)) ||
+    const matchesFromToPath =
+      proposedOp.from && (proposedOp.from === acceptedOp.path || proposedOp.from.indexOf(acceptedOp.path + '/') === 0);
+    const matchesPathToPath =
       (proposedWinsOnEqualPath && acceptedOp.path === proposedOp.path) ||
-      proposedOp.path.indexOf(acceptedOp.path + '/') === 0
-    ) {
+      proposedOp.path.indexOf(acceptedOp.path + '/') === 0;
+
+    if (matchesFromToPath || matchesPathToPath) {
       proposedOps.splice(currentIndex, 1);
       currentIndex--;
     }
