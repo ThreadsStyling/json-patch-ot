@@ -33,8 +33,6 @@
     "lib",
     "src/__tests__",
     "src/**/__tests__/**/*.*",
-    "src/**/__story__/**/*.*",
-    "*.test.ts",
-    "*.test.tsx"
+    "*.test.ts"
   ]
 }

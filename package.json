@@ -4,7 +4,9 @@
   "description": "Library to reconcile JSON patch changes using Operational Transformation",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest --no-cache"
+    "tsc": "tsc",
+    "test": "jest --no-cache",
+    "test-cov": "jest --no-cache --coverage"
   },
   "repository": {
     "type": "git",
