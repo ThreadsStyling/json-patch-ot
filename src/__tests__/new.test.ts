@@ -58,4 +58,21 @@ describe('JSONPatchOT', () => {
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]);
   });
+
+  it('should mutliple array index changes', () => {
+    const acceptedOps: Operation[] = [
+      {op: OpType.remove, path: '/array/3'},
+      {op: OpType.remove, path: '/array/5'},
+    ];
+
+    const proposedOps: Operation[] = [
+      {op: OpType.replace, path: '/array/4', value: 'change name'},
+      {op: OpType.replace, path: '/array/7', value: 'change name'},
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+      {op: OpType.replace, path: '/array/3', value: 'change name'},
+      {op: OpType.replace, path: '/array/5', value: 'change name'},
+    ]);
+  });
 });
