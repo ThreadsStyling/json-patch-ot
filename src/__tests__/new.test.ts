@@ -12,19 +12,13 @@ describe('JSONPatchOT', () => {
       {op: OpType.replace, path: '/removed/array/3', value: 86},
     ];
 
-    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
-      {op: OpType.replace, path: '/some/other', value: 3},
-    ]);
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([{op: OpType.replace, path: '/some/other', value: 3}]);
   });
 
   it('should handle types without a translation function', () => {
-    const acceptedOps: Operation[] = [
-      {op: OpType.test, path: '/test', value: 'test'},
-    ];
+    const acceptedOps: Operation[] = [{op: OpType.test, path: '/test', value: 'test'}];
 
-    const proposedOps: Operation[] = [
-      {op: OpType.replace, path: '/test', value: 'change name'},
-    ];
+    const proposedOps: Operation[] = [{op: OpType.replace, path: '/test', value: 'change name'}];
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual(proposedOps);
   });
@@ -59,49 +53,32 @@ describe('JSONPatchOT', () => {
   });
 
   it('should handle path without slash', () => {
-    const acceptedOps: Operation[] = [
-      {op: OpType.remove, path: ''},
-    ];
+    const acceptedOps: Operation[] = [{op: OpType.remove, path: ''}];
 
-    const proposedOps: Operation[] = [
-      {op: OpType.replace, path: '', value: 'change name'},
-    ];
+    const proposedOps: Operation[] = [{op: OpType.replace, path: '', value: 'change name'}];
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]);
   });
 
   it('should handle add to the same path', () => {
-    const acceptedOps: Operation[] = [
-      {op: OpType.add, path: '/title', value: 'Hello!'},
-    ];
+    const acceptedOps: Operation[] = [{op: OpType.add, path: '/title', value: 'Hello!'}];
 
-    const proposedOps: Operation[] = [
-      {op: OpType.add, path: '/title', value: 'Hi World!'},
-    ];
+    const proposedOps: Operation[] = [{op: OpType.add, path: '/title', value: 'Hi World!'}];
 
-    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
-      {op: OpType.add, path: '/title', value: 'Hi World!'},
-    ]);
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([{op: OpType.add, path: '/title', value: 'Hi World!'}]);
   });
 
   it('should handle add to the same path with options', () => {
     const options = {acceptedWinsOnEqualPath: true};
-    const acceptedOps: Operation[] = [
-      {op: OpType.add, path: '/title', value: 'Hello!'},
-    ];
+    const acceptedOps: Operation[] = [{op: OpType.add, path: '/title', value: 'Hello!'}];
 
-    const proposedOps: Operation[] = [
-      {op: OpType.add, path: '/title', value: 'Hi World!'},
-    ];
+    const proposedOps: Operation[] = [{op: OpType.add, path: '/title', value: 'Hi World!'}];
 
     expect(JSONPatchOT(acceptedOps, proposedOps, options)).toEqual([]);
   });
 
   it('should handle mutliple array index changes', () => {
-    const acceptedOps: Operation[] = [
-      {op: OpType.remove, path: '/array/3'},
-      {op: OpType.remove, path: '/array/5'},
-    ];
+    const acceptedOps: Operation[] = [{op: OpType.remove, path: '/array/3'}, {op: OpType.remove, path: '/array/5'}];
 
     const proposedOps: Operation[] = [
       {op: OpType.replace, path: '/array/4', value: 'change name'},
@@ -160,26 +137,61 @@ describe('JSONPatchOT', () => {
     ]);
   });
 
-  // it('should handle array index changes with accepted moves to and out of an array', () => {
-  //   // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-  //   const acceptedOps: Operation[] = [
-  //     // {op: OpType.move, path: '/array/3', from: '/someval'}, //acts like an add
-  //     {op: OpType.move, path: '/someval', from: '/array/5'}, // acts like a remove
-  //   ];
+  it('should handle array index changes with accepted moves out of array', () => {
+    // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+    const acceptedOps: Operation[] = [
+      {op: OpType.move, path: '/someval', from: '/array/5'}, // acts like a remove
+    ];
 
-  //   // [0, 1, 2, val, 3, 5, 6]; <- Array after accepted copies
+    // [0, 1, 2, 3, 4, 6]; <- Array after accepted copies
 
-  //   // Actions to double some specific values
-  //   const proposedOps: Operation[] = [
-  //     {op: OpType.replace, path: '/array/5', value: 6}, // 3 -> 6
-  //   ];
+    // Actions to double some specific value
+    const proposedOps: Operation[] = [
+      {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
+    ];
 
-  //   expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
-  //     {op: OpType.replace, path: '/array/4', value: 6},
-  //     //{op: OpType.replace, path: '/array/6', value: 8}, <- removed
-  //     {op: OpType.replace, path: '/array/8', value: 12},
-  //   ]);
-  // });
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]);
+  });
+
+  it('should handle array index changes with accepted moves into array', () => {
+    // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+    const acceptedOps: Operation[] = [
+      {op: OpType.move, path: '/array/3', from: '/someval'}, //acts like an add
+    ];
+
+    // [0, 1, 2, val, 3, 5, 6]; <- Array after accepted copies
+
+    // Actions to double some specific values
+    const proposedOps: Operation[] = [
+      {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([{op: OpType.replace, path: '/array/4', value: 6}]);
+  });
+
+  it('should handle array index changes with accepted moves within an array', () => {
+    // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+    const acceptedOps: Operation[] = [
+      {op: OpType.move, path: '/array/3', from: '/array/5'}, //acts like an add
+    ];
+
+    // [0, 1, 2, val, 3, 5, 6]; <- Array after accepted copies
+
+    // Actions to double some specific values
+    const proposedOps: Operation[] = [
+      {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
+      {op: OpType.replace, path: '/array/4', value: 8}, // 4 -> 8
+      {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
+      {op: OpType.replace, path: '/array/6', value: 12}, // 6 -> 12
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+      {op: OpType.replace, path: '/array/4', value: 6},
+      {op: OpType.replace, path: '/array/5', value: 8},
+      // {op: OpType.replace, path: '/array/5', value: 10}, <- removed
+      {op: OpType.replace, path: '/array/6', value: 12}, // <- unchanged
+    ]);
+  });
 
   it('should handle array index changes with accepted adds and removes', () => {
     // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
@@ -199,6 +211,29 @@ describe('JSONPatchOT', () => {
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
       {op: OpType.replace, path: '/array/1', value: 4},
+      // {op: OpType.replace, path: '/array/1', value: 2}, <- removed
+      {op: OpType.replace, path: '/array/5', value: 10},
+    ]);
+  });
+
+  it('should handle array index changes with accepted adds and removes in different order', () => {
+    // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+    const acceptedOps: Operation[] = [
+      {op: OpType.add, path: '/array/1', value: 30},
+      {op: OpType.remove, path: '/array/2'},
+    ];
+
+    // [0, 30, 2, 3, 4, 5, 6]; <- Array after accepted add and remove
+
+    // Actions to double some specific values
+    const proposedOps: Operation[] = [
+      {op: OpType.replace, path: '/array/2', value: 4}, // 2 -> 4
+      {op: OpType.replace, path: '/array/1', value: 2}, // 1 -> 2
+      {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+      {op: OpType.replace, path: '/array/2', value: 4},
       // {op: OpType.replace, path: '/array/1', value: 2}, <- removed
       {op: OpType.replace, path: '/array/5', value: 10},
     ]);
