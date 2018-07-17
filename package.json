@@ -4,7 +4,7 @@
   "description": "Library to reconcile JSON patch changes using Operational Transformation",
   "main": "lib/index.js",
   "scripts": {
-    "tsc": "tsc",
+    "build": "tsc",
     "test": "jest --no-cache",
     "test-cov": "jest --no-cache --coverage"
   },

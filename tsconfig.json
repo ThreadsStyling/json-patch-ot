@@ -15,6 +15,7 @@
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
+    "outDir": "lib",
     "forceConsistentCasingInFileNames": true,
     "noEmitHelpers": true,
     "noEmitOnError": true,

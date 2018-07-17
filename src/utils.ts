@@ -1,20 +1,23 @@
 export function isValidIndex(str: string): boolean {
   const n = parseInt(str);
   return n.toString() === str && n >= 0;
-};
+}
 
-export function replacePathIfHigher(path: string, arrayPath: string, index: string): string {
+export function replacePathIndices(path: string, arrayPath: string, index: string, incUp: boolean = false): string {
   const result = path.substr(arrayPath.length);
-  let eoindex = result.indexOf('/');
+  let slashIndex = result.indexOf('/');
 
-  if (eoindex <= -1) eoindex = result.length;
+  if (slashIndex === -1) slashIndex = result.length;
 
-  const oldIndex = result.substr(0, eoindex);
-  const rest = result.substr(eoindex);
+  const oldIndex = result.substr(0, slashIndex);
+  const rest = result.substr(slashIndex);
+  // For incUp we need to match equal to aswell since that element will be bumped.
+  const isOldBigger = (incUp ? oldIndex >= index : oldIndex > index);
+  const shouldChangeIndex = isValidIndex(oldIndex) && isOldBigger;
 
-  if (isValidIndex(oldIndex) && oldIndex > index) {
-    return arrayPath + (parseInt(oldIndex) - 1) + rest;
+  if (shouldChangeIndex) {
+    return arrayPath + (parseInt(oldIndex) + (incUp ? 1 : -1)) + rest;
   } else {
     return path;
   }
-};
+}

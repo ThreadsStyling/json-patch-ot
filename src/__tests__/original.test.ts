@@ -10,7 +10,7 @@ describe('JSONPatchOT', function() {
     });
 
     it('2 arrays with options', function() {
-      expect(JSONPatchOT(accepted, proposed, {proposedWinsOnEqualPath: true})).toEqual(proposed);
+      expect(JSONPatchOT(accepted, proposed, {acceptedWinsOnEqualPath: true})).toEqual(proposed);
     });
   });
 
