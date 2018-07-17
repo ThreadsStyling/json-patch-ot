@@ -1,5 +1,5 @@
 export interface Options {
-  proposedWinsOnEqualPath?: boolean;
+  acceptedWinsOnEqualPath?: boolean;
 }
 
 export enum OpType {
@@ -55,11 +55,73 @@ export type Operation =
   | OperationMove
   | OperationTest;
 
-import {isValidIndex, replacePathIfHigher} from './utils';
+import {isValidIndex, replacePathIndices} from './utils';
+
+const shiftIndices = function(acceptedOp: Operation, proposedOps: Operation[], isAdd: boolean = false): void {
+  // shift indexes
+  const lastSlash = acceptedOp.path.lastIndexOf('/');
+
+  if (lastSlash > -1) {
+    const index = acceptedOp.path.substr(lastSlash + 1);
+    const arrayPath = acceptedOp.path.substr(0, lastSlash + 1);
+
+    if (isValidIndex(index)) {
+      const propChangesLen = proposedOps.length;
+      let currentIndex = 0;
+
+      while (currentIndex < propChangesLen) {
+        const proposedOp = proposedOps[currentIndex];
+        currentIndex++;
+
+        if (proposedOp.path.indexOf(arrayPath) === 0) {
+          //item from the same array
+          proposedOp.path = replacePathIndices(proposedOp.path, arrayPath, index, isAdd);
+        }
+
+        if (proposedOp.from && proposedOp.from.indexOf(arrayPath) === 0) {
+          //item from the same array
+          proposedOp.from = replacePathIndices(proposedOp.from, arrayPath, index, isAdd);
+        }
+      }
+    }
+  }
+};
+
+const removeOperations = function(
+  acceptedOp: Operation,
+  proposedOps: Operation[],
+  options: Options,
+  skipCondition?: Function,
+) {
+  const {acceptedWinsOnEqualPath} = options;
+  let currentIndex = 0;
+  let proposedOp;
+
+  // remove operation objects within replaced JSON node
+  while ((proposedOp = proposedOps[currentIndex])) {
+    const matchesFromToPath =
+      proposedOp.from && (proposedOp.from === acceptedOp.path || proposedOp.from.indexOf(acceptedOp.path + '/') === 0);
+    const matchesPathToPath =
+      (acceptedWinsOnEqualPath && acceptedOp.path === proposedOp.path) ||
+      proposedOp.path.indexOf(acceptedOp.path + '/') === 0;
+
+    if (skipCondition && skipCondition(acceptedOp, proposedOp)) {
+
+    } else if (matchesFromToPath || matchesPathToPath) {
+      proposedOps.splice(currentIndex, 1);
+      currentIndex--;
+    }
+
+    currentIndex++;
+  }
+};
 
 const removeTransformer = function(acceptedOp: Operation, proposedOps: Operation[]): void {
-  let propChangesLen = proposedOps.length;
-  let currentIndex = 0;
+  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, function (acceptedOp, proposedOp) {
+    return (proposedOp.op === 'add' || proposedOp.op === 'test') && acceptedOp.path === proposedOp.path;
+  });
+  shiftIndices(acceptedOp, proposedOps);
+  /*let currentIndex = 0;
   let proposedOp;
 
   while ((proposedOp = proposedOps[currentIndex])) {
@@ -72,66 +134,27 @@ const removeTransformer = function(acceptedOp: Operation, proposedOps: Operation
       // do nothing ? (tomalec)
     } else if (matchesFromToPath || matchesPathToPath) {
       proposedOps.splice(currentIndex, 1);
-      propChangesLen--;
       currentIndex--;
     }
     currentIndex++;
   }
-  // shift indexes
-  const lastSlash = acceptedOp.path.lastIndexOf('/');
 
-  if (lastSlash > -1) {
-    const index = acceptedOp.path.substr(lastSlash + 1);
-    const arrayPath = acceptedOp.path.substr(0, lastSlash + 1);
-
-    if (isValidIndex(index)) {
-      // Assumes that number given in path means this is an array
-
-      // Shifting array indeces
-      propChangesLen = proposedOps.length;
-      currentIndex = 0;
-      while (currentIndex < propChangesLen) {
-        proposedOp = proposedOps[currentIndex];
-        currentIndex++;
-
-        if (proposedOp.path.indexOf(arrayPath) === 0) {
-          //item from the same array
-          proposedOp.path = replacePathIfHigher(proposedOp.path, arrayPath, index);
-        }
-
-        if (proposedOp.from && proposedOp.from.indexOf(arrayPath) === 0) {
-          //item from the same array
-          proposedOp.from = replacePathIfHigher(proposedOp.from, arrayPath, index);
-        }
-      }
-    }
-  }
+  shiftIndices(acceptedOp, proposedOps);*/
 };
 
-const replaceTransformer = function(acceptedOp: Operation, proposedOps: Operation[], options: Options) {
-  const {proposedWinsOnEqualPath} = options;
-  let currentIndex = 0;
-  let proposedOp;
+const replaceTransformer = function(acceptedOp: Operation, proposedOps: Operation[], options: Options): void {
+  removeOperations(acceptedOp, proposedOps, options);
+};
 
-  // remove operation objects within replaced JSON node
-  while ((proposedOp = proposedOps[currentIndex])) {
-    const matchesFromToPath =
-      proposedOp.from && (proposedOp.from === acceptedOp.path || proposedOp.from.indexOf(acceptedOp.path + '/') === 0);
-    const matchesPathToPath =
-      (proposedWinsOnEqualPath && acceptedOp.path === proposedOp.path) ||
-      proposedOp.path.indexOf(acceptedOp.path + '/') === 0;
-
-    if (matchesFromToPath || matchesPathToPath) {
-      proposedOps.splice(currentIndex, 1);
-      currentIndex--;
-    }
-    currentIndex++;
-  }
+const addTransformer = function(acceptedOp: Operation, proposedOps: Operation[], options: Options): void {
+  removeOperations(acceptedOp, proposedOps, options);
+  shiftIndices(acceptedOp, proposedOps, true);
 };
 
 const transformAgainst = {
   remove: removeTransformer,
   replace: replaceTransformer,
+  add: addTransformer,
 };
 
 const reduceJSONPatches = function(proposedOps: Operation[], acceptedOp: Operation, options: Options) {

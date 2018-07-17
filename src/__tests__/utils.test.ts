@@ -1,6 +1,6 @@
-import {isValidIndex, replacePathIfHigher} from '../utils';
+import {isValidIndex, replacePathIndices} from '../utils';
 
-describe('Utils', () => {
+describe.only('Utils', () => {
   describe('isIndexValid', () => {
     it('should return true if valid index passed', () => {
       expect(isValidIndex('0'));
@@ -17,16 +17,31 @@ describe('Utils', () => {
     });
   })
   
-  describe('replacePathIfHigher', () => {
-    it('should adjust array indeces in the path', () => {
-      expect(replacePathIfHigher('/array/6', '/array/', '3')).toBe('/array/5');
-      expect(replacePathIfHigher('/array/3', '/array/', '2')).toBe('/array/2');
+  describe('replacePathIndices', () => {
+    // Use for remove
+    it('should adjust array indices in the path', () => {
+      expect(replacePathIndices('/array/6', '/array/', '3')).toBe('/array/5');
+      expect(replacePathIndices('/array/6/long/path', '/array/', '3')).toBe('/array/5/long/path');
+      expect(replacePathIndices('/array/3/', '/array/', '2')).toBe('/array/2/');
     });
     it('should not adjust the path', () => {
-      expect(replacePathIfHigher('/array/3', '/array/', '3')).toBe('/array/3');
-      expect(replacePathIfHigher('/array/3', '/array/', '2')).toBe('/array/2');
-      expect(replacePathIfHigher('/array/four', '/array/', '2')).toBe('/array/four');
-      expect(replacePathIfHigher('/array/4', '/array/', 'four')).toBe('/array/4');
+      expect(replacePathIndices('/array/3', '/array/', '3')).toBe('/array/3');
+      expect(replacePathIndices('/array/3', '/array/', '2')).toBe('/array/2');
+      expect(replacePathIndices('/array/four', '/array/', '2')).toBe('/array/four');
+      expect(replacePathIndices('/array/4', '/array/', 'four')).toBe('/array/4');
+    });
+
+    // Used for add
+    it('should adjust array indices in the path with increment up option passed', () => {
+      expect(replacePathIndices('/array/6', '/array/', '3', true)).toBe('/array/7');
+      expect(replacePathIndices('/array/4/', '/array/', '3', true)).toBe('/array/5/');
+      expect(replacePathIndices('/array/3/long/path', '/array/', '3', true)).toBe('/array/4/long/path');
+      expect(replacePathIndices('/array/3', '/array/', '3', true)).toBe('/array/4');
+    });
+    it('should not adjust the path with increment up option passed', () => {
+      expect(replacePathIndices('/array/2', '/array/', '3', true)).toBe('/array/2');
+      expect(replacePathIndices('/array/four', '/array/', '3', true)).toBe('/array/four');
+      expect(replacePathIndices('/array/four/', '/array/', '3', true)).toBe('/array/four/');
     });
   });
 });
