@@ -17,6 +17,18 @@ describe('JSONPatchOT', () => {
     ]);
   });
 
+  it('should handle types without a translation function', () => {
+    const acceptedOps: Operation[] = [
+      {op: OpType.test, path: '/test', value: 'test'},
+    ];
+
+    const proposedOps: Operation[] = [
+      {op: OpType.replace, path: '/test', value: 'change name'},
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual(proposedOps);
+  });
+
   it('should cancel changes against a replace at the same level', () => {
     const options = {acceptedWinsOnEqualPath: true};
     const acceptedOps: Operation[] = [{op: OpType.replace, path: '/toreplace', value: 'new val'}];
@@ -38,7 +50,6 @@ describe('JSONPatchOT', () => {
       {op: OpType.add, path: '/another', value: 'hello'},
     ];
 
-    // This shouldn't happen, should be prevented by client
     const proposedOps: Operation[] = [
       {op: OpType.add, path: '/something/else', value: 'change name'},
       {op: OpType.add, path: '/something/here', value: 'something else'},
