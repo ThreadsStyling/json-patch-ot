@@ -137,6 +137,50 @@ describe('JSONPatchOT', () => {
     ]);
   });
 
+  it('should handle array index changes with accepted copies', () => {
+    // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+    const acceptedOps: Operation[] = [
+      {op: OpType.copy, path: '/array/3', from: '/someval'},
+      {op: OpType.copy, path: '/array/5', from: '/someval'},
+    ];
+
+    // [0, 1, 2, val, 3, val, 4, 5, 6]; <- Array after accepted copies
+
+    // Actions to double some specific values
+    const proposedOps: Operation[] = [
+      {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
+      {op: OpType.replace, path: '/array/4', value: 8}, // 4 -> 8
+      {op: OpType.replace, path: '/array/6', value: 12}, // 6 -> 12
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+      {op: OpType.replace, path: '/array/4', value: 6},
+      {op: OpType.replace, path: '/array/6', value: 8},
+      {op: OpType.replace, path: '/array/8', value: 12},
+    ]);
+  });
+
+  // it('should handle array index changes with accepted moves to and out of an array', () => {
+  //   // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+  //   const acceptedOps: Operation[] = [
+  //     // {op: OpType.move, path: '/array/3', from: '/someval'}, //acts like an add
+  //     {op: OpType.move, path: '/someval', from: '/array/5'}, // acts like a remove
+  //   ];
+
+  //   // [0, 1, 2, val, 3, 5, 6]; <- Array after accepted copies
+
+  //   // Actions to double some specific values
+  //   const proposedOps: Operation[] = [
+  //     {op: OpType.replace, path: '/array/5', value: 6}, // 3 -> 6
+  //   ];
+
+  //   expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+  //     {op: OpType.replace, path: '/array/4', value: 6},
+  //     //{op: OpType.replace, path: '/array/6', value: 8}, <- removed
+  //     {op: OpType.replace, path: '/array/8', value: 12},
+  //   ]);
+  // });
+
   it('should handle array index changes with accepted adds and removes', () => {
     // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
     const acceptedOps: Operation[] = [
@@ -144,7 +188,7 @@ describe('JSONPatchOT', () => {
       {op: OpType.add, path: '/array/3', value: 30},
     ];
 
-    // [0, 2, 3, 30, 4, 5, 6]; <- Array after accepted adds
+    // [0, 2, 3, 30, 4, 5, 6]; <- Array after accepted add and remove
 
     // Actions to double some specific values
     const proposedOps: Operation[] = [
