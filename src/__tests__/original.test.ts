@@ -18,10 +18,10 @@ describe('JSONPatchOT', function() {
    * Against Replace
    */
   describe('against `replace` operation, ', function() {
-    const againstReplace: Operation = {op: OpType.replace, path: '/some/where', value: 5};
+    const acceptedChange: Operation = {op: OpType.replace, path: '/some/where', value: 5};
 
     describe('another operation, with separated `path` (and `from` if applicable)', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.add, path: '/separated/path/b', value: 'b'},
         {op: OpType.replace, path: '/separated/path/c', value: 'c'},
@@ -31,12 +31,12 @@ describe('JSONPatchOT', function() {
       ];
 
       it('nothing should be changed', function() {
-        expect(JSONPatchOT([againstReplace], sequenceJSON)).toEqual(sequenceJSON);
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual(proposedChanges);
       });
     });
 
     describe('an `test`, `add`, `replace`, or `remove` operation with `path` that was descendant of replaced object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.test, path: '/some/where/a', value: 'a'},
         {op: OpType.test, path: '/some/where/deeper/a', value: 'a'},
@@ -51,7 +51,7 @@ describe('JSONPatchOT', function() {
       ];
 
       it('operation object should be removed', function() {
-        expect(JSONPatchOT([againstReplace], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.test, path: '/separated/path/a', value: 'a'},
           {op: OpType.move, path: '/separated/path/e', from: '/separated/path/f'},
           {op: OpType.copy, path: '/separated/path/g', from: '/separated/path/h'},
@@ -60,7 +60,7 @@ describe('JSONPatchOT', function() {
     });
 
     describe('an `test`, `add`, `replace`, or `remove` operation with `path` that equal to replaced object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.add, path: '/some/where', value: 'a'},
         {op: OpType.test, path: '/some/where', value: 'a'},
         {op: OpType.replace, path: '/some/where', value: 'b'},
@@ -68,7 +68,7 @@ describe('JSONPatchOT', function() {
       ];
 
       it('nothing should be changed', function() {
-        expect(JSONPatchOT([againstReplace], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.add, path: '/some/where', value: 'a'},
           {op: OpType.test, path: '/some/where', value: 'a'},
           {op: OpType.replace, path: '/some/where', value: 'b'},
@@ -78,7 +78,7 @@ describe('JSONPatchOT', function() {
     });
 
     describe('an `move`, or `copy` operation with `from` that was equal, or descendant of replaced object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.copy, path: '/separated/path/g', from: '/some/where'},
         {op: OpType.copy, path: '/separated/path/g', from: '/some/where/deeper'},
@@ -87,21 +87,21 @@ describe('JSONPatchOT', function() {
       ];
 
       it('operation object should be removed', function() {
-        expect(JSONPatchOT([againstReplace], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.test, path: '/separated/path/a', value: 'a'},
         ]);
       });
     });
 
     describe('an `move`, or `copy` operation with `path` that was equal of replaced object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.copy, path: '/some/where', from: '/separated/path/b'},
         {op: OpType.move, path: '/some/where', from: '/separated/path/c'},
       ];
 
       it('nothing should be changed', function() {
-        expect(JSONPatchOT([againstReplace], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.test, path: '/separated/path/a', value: 'a'},
           {op: OpType.copy, path: '/some/where', from: '/separated/path/b'},
           {op: OpType.move, path: '/some/where', from: '/separated/path/c'},
@@ -110,14 +110,14 @@ describe('JSONPatchOT', function() {
     });
 
     describe('an `move`, or `copy` operation with `path` that was descendant of replaced object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.copy, path: '/some/where/deeper', from: '/separated/path/b'},
         {op: OpType.move, path: '/some/where/deeper', from: '/separated/path/c'},
       ];
 
       it('operation object should be removed', function() {
-        expect(JSONPatchOT([againstReplace], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.test, path: '/separated/path/a', value: 'a'},
         ]);
       });
@@ -128,10 +128,10 @@ describe('JSONPatchOT', function() {
    * Against Remove
    */
   describe('against `remove` operation, ', function() {
-    const againstRemove: Operation = {op: OpType.remove, path: '/some/where'};
+    const acceptedChange: Operation = {op: OpType.remove, path: '/some/where'};
 
     describe('another operation, with separated `path` (and `from` if applicable)', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/some/path/a', value: 'a'},
         {op: OpType.add, path: '/some/path/b', value: 'b'},
         {op: OpType.replace, path: '/some/path/c', value: 'c'},
@@ -141,12 +141,12 @@ describe('JSONPatchOT', function() {
       ];
 
       it('nothing should be changed', function() {
-        expect(JSONPatchOT([againstRemove], sequenceJSON)).toEqual(sequenceJSON);
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual(proposedChanges);
       });
     });
 
     describe('an `test`, `add`, `replace`, or `remove` operation with `path` that was descendant of removed object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.test, path: '/some/where/a', value: 'a'},
         {op: OpType.test, path: '/some/where/deeper/a', value: 'a'},
@@ -161,7 +161,7 @@ describe('JSONPatchOT', function() {
       ];
 
       it('operation object should be removed', function() {
-        expect(JSONPatchOT([againstRemove], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.test, path: '/separated/path/a', value: 'a'},
           {op: OpType.move, path: '/separated/path/e', from: '/separated/path/f'},
           {op: OpType.copy, path: '/separated/path/g', from: '/separated/path/h'},
@@ -170,13 +170,13 @@ describe('JSONPatchOT', function() {
     });
 
     describe('a `test`, or `add` operation with `path` that equal to removed object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.add, path: '/some/where', value: 'a'},
         {op: OpType.test, path: '/some/where', value: 'a'},
       ];
 
       it('nothing should be changed', function() {
-        expect(JSONPatchOT([againstRemove], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.add, path: '/some/where', value: 'a'},
           {op: OpType.test, path: '/some/where', value: 'a'},
         ]);
@@ -184,18 +184,18 @@ describe('JSONPatchOT', function() {
     });
 
     describe('a `replace`, or `remove` operation with `path` that equal to removed object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.add, path: '/smth/else', value: 'a'},
         {op: OpType.replace, path: '/some/where', value: 'b'},
         {op: OpType.remove, path: '/some/where'},
       ];
       it('operation object should be removed', function() {
-        expect(JSONPatchOT([againstRemove], sequenceJSON)).toEqual([{op: OpType.add, path: '/smth/else', value: 'a'}]);
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([{op: OpType.add, path: '/smth/else', value: 'a'}]);
       });
     });
 
     describe('an `move`, or `copy` operation with `from` that was equal, or descendant of replaced object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.copy, path: '/separated/path/g', from: '/some/where'},
         {op: OpType.copy, path: '/separated/path/g', from: '/some/where/deeper'},
@@ -204,14 +204,14 @@ describe('JSONPatchOT', function() {
       ];
 
       it('operation object should be removed', function() {
-        expect(JSONPatchOT([againstRemove], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.test, path: '/separated/path/a', value: 'a'},
         ]);
       });
     });
 
     describe('an `move`, or `copy` operation with `path` that was equal, or descendant of replaced object', function() {
-      const sequenceJSON: Operation[] = [
+      const proposedChanges: Operation[] = [
         {op: OpType.test, path: '/separated/path/a', value: 'a'},
         {op: OpType.copy, path: '/some/where', from: '/separated/path/b'},
         {op: OpType.copy, path: '/some/where/deeper', from: '/separated/path/b'},
@@ -220,7 +220,7 @@ describe('JSONPatchOT', function() {
       ];
 
       it('operation object should be removed', function() {
-        expect(JSONPatchOT([againstRemove], sequenceJSON)).toEqual([
+        expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
           {op: OpType.test, path: '/separated/path/a', value: 'a'},
         ]);
       });
@@ -230,10 +230,10 @@ describe('JSONPatchOT', function() {
      * Arrays
      */
     describe('of array item,', function() {
-      const againstRemove: Operation = {op: OpType.remove, path: '/some/where/1'};
+      const acceptedChange: Operation = {op: OpType.remove, path: '/some/where/1'};
 
       describe('another operation, with `path` or `from` equal or descendant to item above removed one', function() {
-        const sequenceJSON: Operation[] = [
+        const proposedChanges: Operation[] = [
           {op: OpType.test, path: '/some/where/0', value: 'a'},
           {op: OpType.test, path: '/some/where/2', value: {smth: 'a'}},
           {op: OpType.test, path: '/some/where/2/smth', value: 'a'},
@@ -261,7 +261,7 @@ describe('JSONPatchOT', function() {
         ];
 
         it('paths should get shifted down', function() {
-          expect(JSONPatchOT([againstRemove], sequenceJSON)).toEqual([
+          expect(JSONPatchOT([acceptedChange], proposedChanges)).toEqual([
             {op: OpType.test, path: '/some/where/0', value: 'a'},
             {op: OpType.test, path: '/some/where/1', value: {smth: 'a'}},
             {op: OpType.test, path: '/some/where/1/smth', value: 'a'},
