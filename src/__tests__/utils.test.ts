@@ -1,13 +1,13 @@
 import {isValidIndex, replacePathIndices} from '../utils';
 
-describe.only('Utils', () => {
+describe('Utils', () => {
   describe('isIndexValid', () => {
     it('should return true if valid index passed', () => {
       expect(isValidIndex('0'));
       expect(isValidIndex('10'));
       expect(isValidIndex('45'));
     });
-  
+
     it('should return false if invalid index passed', () => {
       expect(isValidIndex('')).not.toBe(true);
       expect(isValidIndex('04')).not.toBe(true);
@@ -15,8 +15,8 @@ describe.only('Utils', () => {
       expect(isValidIndex('/')).not.toBe(true);
       expect(isValidIndex('wef')).not.toBe(true);
     });
-  })
-  
+  });
+
   describe('replacePathIndices', () => {
     // Use for remove
     it('should adjust array indices in the path', () => {

@@ -4,9 +4,13 @@
   "description": "Library to reconcile JSON patch changes using Operational Transformation",
   "main": "lib/index.js",
   "scripts": {
+    "tslint": "tslint './src/**/*.ts' -t verbose",
+    "lint": "yarn tslint",
     "build": "tsc",
     "test": "jest --no-cache",
-    "test-cov": "jest --no-cache --coverage"
+    "test:coverage": "jest --no-cache --coverage",
+    "prettier": "prettier --write 'src/**/*.{ts,js,json}'",
+    "prettier:diff": "prettier --list-different 'src/**/*.{ts,js,json}'"
   },
   "repository": {
     "type": "git",
