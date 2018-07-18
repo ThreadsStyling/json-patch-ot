@@ -17,7 +17,6 @@ describe('JSONPatchOT', () => {
 
   it('should handle types without a translation function', () => {
     const acceptedOps: Operation[] = [{op: OpType.test, path: '/test', value: 'test'}];
-
     const proposedOps: Operation[] = [{op: OpType.replace, path: '/test', value: 'change name'}];
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual(proposedOps);
@@ -54,7 +53,6 @@ describe('JSONPatchOT', () => {
 
   it('should handle path without slash', () => {
     const acceptedOps: Operation[] = [{op: OpType.remove, path: ''}];
-
     const proposedOps: Operation[] = [{op: OpType.replace, path: '', value: 'change name'}];
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]);
@@ -62,7 +60,6 @@ describe('JSONPatchOT', () => {
 
   it('should handle add to the same path', () => {
     const acceptedOps: Operation[] = [{op: OpType.add, path: '/title', value: 'Hello!'}];
-
     const proposedOps: Operation[] = [{op: OpType.add, path: '/title', value: 'Hi World!'}];
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([{op: OpType.add, path: '/title', value: 'Hi World!'}]);
@@ -71,7 +68,6 @@ describe('JSONPatchOT', () => {
   it('should handle add to the same path with options', () => {
     const options = {acceptedWinsOnEqualPath: true};
     const acceptedOps: Operation[] = [{op: OpType.add, path: '/title', value: 'Hello!'}];
-
     const proposedOps: Operation[] = [{op: OpType.add, path: '/title', value: 'Hi World!'}];
 
     expect(JSONPatchOT(acceptedOps, proposedOps, options)).toEqual([]);
@@ -79,7 +75,6 @@ describe('JSONPatchOT', () => {
 
   it('should handle mutliple array index changes', () => {
     const acceptedOps: Operation[] = [{op: OpType.remove, path: '/array/3'}, {op: OpType.remove, path: '/array/5'}];
-
     const proposedOps: Operation[] = [
       {op: OpType.replace, path: '/array/4', value: 'change name'},
       {op: OpType.replace, path: '/array/7', value: 'change name'},
