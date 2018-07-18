@@ -9,6 +9,7 @@
     "build": "tsc",
     "test": "jest --no-cache",
     "test:coverage": "jest --no-cache --coverage",
+    "test:watch": "jest --no-cache --watch",
     "prettier": "prettier --write 'src/**/*.{ts,js,json}'",
     "prettier:diff": "prettier --list-different 'src/**/*.{ts,js,json}'",
     "precommit": "pretty-quick --staged && yarn lint"

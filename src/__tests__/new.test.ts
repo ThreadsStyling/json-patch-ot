@@ -179,6 +179,7 @@ describe('JSONPatchOT', () => {
 
     // Actions to double some specific values
     const proposedOps: Operation[] = [
+      {op: OpType.replace, path: '/array/1', value: 2}, // 1 -> 2
       {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
       {op: OpType.replace, path: '/array/4', value: 8}, // 4 -> 8
       {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
@@ -186,6 +187,7 @@ describe('JSONPatchOT', () => {
     ];
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+      {op: OpType.replace, path: '/array/1', value: 2}, // <- unchanged
       {op: OpType.replace, path: '/array/4', value: 6},
       {op: OpType.replace, path: '/array/5', value: 8},
       // {op: OpType.replace, path: '/array/5', value: 10}, <- removed
@@ -264,5 +266,26 @@ describe('JSONPatchOT', () => {
       // {op: OpType.remove, path: '/array/0'}, <- removed
       {op: OpType.add, path: '/array/0', value: 50},
     ]);
+  });
+
+  it('should remove move and copy operations given different conflicts', () => {
+    const acceptedOps: Operation[] = [
+      {op: OpType.move, from: '/one/path', path: '/one/where'},
+      {op: OpType.move, from: '/two/where', path: '/two/path'},
+      {op: OpType.remove, path: '/three/path'},
+    ];
+
+    const proposedOps: Operation[] = [
+      {op: OpType.copy, from: '/one/path', path: '/to/path'},
+      {op: OpType.move, from: '/one/path', path: '/another/path'},
+      {op: OpType.copy, from: '/two/path', path: '/another/two'},
+      {op: OpType.move, from: '/two/path', path: '/another/two'},
+      {op: OpType.copy, from: '/three/path', path: '/another/two'},
+      {op: OpType.move, from: '/three/path', path: '/another/two'},
+      {op: OpType.copy, from: '/something/else', path: '/three/path'},
+      {op: OpType.move, from: '/something/else', path: '/three/path'},
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]); // all removed
   });
 });
