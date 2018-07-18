@@ -57,12 +57,12 @@ export type Operation =
 
 import {isValidIndex, replacePathIndices} from './utils';
 
-const shiftIndices = function(
+const shiftIndices = (
   acceptedOp: Operation,
   proposedOps: Operation[],
-  isAdd: boolean = false,
-  pathProp: string = 'path',
-): void {
+  isAdd = false,
+  pathProp = 'path',
+): void => {
   const lastSlash = acceptedOp[pathProp].lastIndexOf('/');
 
   if (lastSlash === -1) return;
@@ -88,26 +88,31 @@ const shiftIndices = function(
   });
 };
 
-const removeOperations = function(
+const allowWhitelist = (acceptedOp: Operation, proposedOp: Operation): boolean => {
+  return (proposedOp.op === 'add' || proposedOp.op === 'test') && acceptedOp.path === proposedOp.path;
+};
+
+const removeOperations = (
   acceptedOp: Operation,
   proposedOps: Operation[],
   options: Options,
-  skipCondition?: (acceptedOp: Operation, proposedOp: Operation) => boolean,
-  pathProp: string = 'path',
-) {
+  skipWhitelist = false,
+  pathProp = 'path',
+): void => {
   const {acceptedWinsOnEqualPath} = options;
   let currentIndex = 0;
   let proposedOp;
 
   // remove operation objects within replaced JSON node
-  while ((proposedOp = proposedOps[currentIndex])) {
+  while ((proposedOps[currentIndex])) {
+    proposedOp = proposedOps[currentIndex]
     const matchesFromToPath =
       proposedOp.from &&
       (proposedOp.from === acceptedOp[pathProp] || proposedOp.from.indexOf(acceptedOp[pathProp] + '/') === 0);
     const matchesPathToPath =
       (acceptedWinsOnEqualPath && acceptedOp[pathProp] === proposedOp.path) ||
       proposedOp.path.indexOf(acceptedOp[pathProp] + '/') === 0;
-    const shouldSkip = !!(skipCondition && skipCondition(acceptedOp, proposedOp));
+    const shouldSkip = skipWhitelist ? allowWhitelist(acceptedOp, proposedOp) : false;
 
     if (!shouldSkip && (matchesFromToPath || matchesPathToPath)) {
       proposedOps.splice(currentIndex, 1);
@@ -118,25 +123,23 @@ const removeOperations = function(
   }
 };
 
-const removeTransformer = function(acceptedOp: Operation, proposedOps: Operation[]): void {
-  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, function(acceptedOp, proposedOp) {
-    return (proposedOp.op === 'add' || proposedOp.op === 'test') && acceptedOp.path === proposedOp.path;
-  });
+const removeTransformer = (acceptedOp: Operation, proposedOps: Operation[]): void => {
+  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, true);
   shiftIndices(acceptedOp, proposedOps);
 };
 
-const replaceTransformer = function(acceptedOp: Operation, proposedOps: Operation[], options: Options): void {
+const replaceTransformer = (acceptedOp: Operation, proposedOps: Operation[], options: Options): void => {
   removeOperations(acceptedOp, proposedOps, options);
 };
 
-const addTransformer = function(acceptedOp: Operation, proposedOps: Operation[], options: Options): void {
+const addTransformer = (acceptedOp: Operation, proposedOps: Operation[], options: Options): void => {
   removeOperations(acceptedOp, proposedOps, options);
   shiftIndices(acceptedOp, proposedOps, true);
 };
 
-const moveTransformer = function(acceptedOp: Operation, proposedOps: Operation[], options: Options): void {
-  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, undefined, 'from'); // like a remove
-  removeOperations(acceptedOp, proposedOps, options, undefined, 'path'); // like an add
+const moveTransformer = (acceptedOp: Operation, proposedOps: Operation[], options: Options): void => {
+  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, true, 'from'); // like a remove
+  removeOperations(acceptedOp, proposedOps, options, false, 'path'); // like an add
   shiftIndices(acceptedOp, proposedOps, true, 'path'); // like an add
   shiftIndices(acceptedOp, proposedOps, false, 'from'); // like a remove
 };
@@ -149,7 +152,7 @@ const transformAgainst = {
   move: moveTransformer,
 };
 
-const reduceJSONPatches = function(proposedOps: Operation[], acceptedOp: Operation, options: Options): Operation[] {
+const reduceJSONPatches = (proposedOps: Operation[], acceptedOp: Operation, options: Options): Operation[] => {
   const transformFunc = transformAgainst[acceptedOp.op];
 
   if (transformFunc) transformFunc(acceptedOp, proposedOps, options);

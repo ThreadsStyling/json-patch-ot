@@ -156,7 +156,7 @@ describe('JSONPatchOT', () => {
   it('should handle array index changes with accepted moves into array', () => {
     // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
     const acceptedOps: Operation[] = [
-      {op: OpType.move, path: '/array/3', from: '/someval'}, //acts like an add
+      {op: OpType.move, path: '/array/3', from: '/someval'}, // acts like an add
     ];
 
     // [0, 1, 2, val, 3, 5, 6]; <- Array after accepted copies
@@ -172,7 +172,7 @@ describe('JSONPatchOT', () => {
   it('should handle array index changes with accepted moves within an array', () => {
     // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
     const acceptedOps: Operation[] = [
-      {op: OpType.move, path: '/array/3', from: '/array/5'}, //acts like an add
+      {op: OpType.move, path: '/array/3', from: '/array/5'}, // acts like an add
     ];
 
     // [0, 1, 2, val, 3, 5, 6]; <- Array after accepted copies
@@ -236,6 +236,33 @@ describe('JSONPatchOT', () => {
       {op: OpType.replace, path: '/array/2', value: 4},
       // {op: OpType.replace, path: '/array/1', value: 2}, <- removed
       {op: OpType.replace, path: '/array/5', value: 10},
+    ]);
+  });
+
+  it('should handle array index changes with many different accepted changes', () => {
+    // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+    const acceptedOps: Operation[] = [
+      {op: OpType.add, path: '/array/1', value: 30},
+      {op: OpType.move, path: '/array/1', from: '/array/6'},
+      {op: OpType.copy, path: '/array/2', from: '/array/6'},
+      {op: OpType.remove, path: '/array/0'},
+    ];
+
+    // [6, 4, 30, 1, 2, 3, 4, 5]; <- Array after accepted add and remove
+
+    // Actions to double some specific values
+    const proposedOps: Operation[] = [
+      {op: OpType.move, from: '/array/2', path: '/array/4'},
+      {op: OpType.remove, path: '/array/1'},
+      {op: OpType.remove, path: '/array/0'},
+      {op: OpType.add, path: '/array/0', value: 50},
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+      {op: OpType.move, from: '/array/4', path: '/array/6'},
+      {op: OpType.remove, path: '/array/3'},
+      // {op: OpType.remove, path: '/array/0'}, <- removed
+      {op: OpType.add, path: '/array/0', value: 50},
     ]);
   });
 });
