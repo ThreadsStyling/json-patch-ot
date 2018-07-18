@@ -57,12 +57,7 @@ export type Operation =
 
 import {isValidIndex, replacePathIndices} from './utils';
 
-const shiftIndices = (
-  acceptedOp: Operation,
-  proposedOps: Operation[],
-  isAdd = false,
-  pathProp = 'path',
-): void => {
+const shiftIndices = (acceptedOp: Operation, proposedOps: Operation[], isAdd = false, pathProp = 'path'): void => {
   const lastSlash = acceptedOp[pathProp].lastIndexOf('/');
 
   if (lastSlash === -1) return;
@@ -104,8 +99,8 @@ const removeOperations = (
   let proposedOp;
 
   // remove operation objects within replaced JSON node
-  while ((proposedOps[currentIndex])) {
-    proposedOp = proposedOps[currentIndex]
+  while (proposedOps[currentIndex]) {
+    proposedOp = proposedOps[currentIndex];
     const matchesFromToPath =
       proposedOp.from &&
       (proposedOp.from === acceptedOp[pathProp] || proposedOp.from.indexOf(acceptedOp[pathProp] + '/') === 0);
