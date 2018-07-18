@@ -29,11 +29,5 @@
   },
   "include": ["src"],
   "typeRoots": ["./node_modules/@types", "./typings"],
-  "exclude": [
-    "node_modules",
-    "lib",
-    "src/__tests__",
-    "src/**/__tests__/**/*.*",
-    "*.test.ts"
-  ]
+  "exclude": ["node_modules", "lib", "src/__tests__", "src/**/__tests__/**/*.*", "*.test.ts"]
 }
