@@ -67,7 +67,7 @@ const shiftIndices = (acceptedOp: Operation, proposedOps: Operation[], isAdd = f
 
   if (!isValidIndex(index)) return;
 
-  proposedOps.forEach((proposedOp) => {
+  for (const proposedOp of proposedOps) {
     const pathOfSameArray = proposedOp.path.indexOf(arrayPath) === 0;
 
     if (pathOfSameArray) {
@@ -80,7 +80,7 @@ const shiftIndices = (acceptedOp: Operation, proposedOps: Operation[], isAdd = f
     if (hasFromOp && fromOfSameArray) {
       hasFromOp.from = replacePathIndices(hasFromOp.from, arrayPath, index, isAdd);
     }
-  });
+  }
 };
 
 const allowWhitelist = (acceptedOp: Operation, proposedOp: Operation): boolean => {
