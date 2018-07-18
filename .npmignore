@@ -4,6 +4,9 @@ node_modules/
 /coverage/
 package-lock.json
 yarn-error.log
-/lib/
 /modules/
 .DS_Store
+.vscode/
+yarn.lock
+/src/
+/assets/

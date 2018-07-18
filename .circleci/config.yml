@@ -1,0 +1,83 @@
+version: 2
+
+refs:
+  container: &container
+    docker:
+      - image: node:8.11
+    working_directory: ~/repo
+
+jobs:
+  all:
+    <<: *container
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Versions
+          command: node -v && npm -v && yarn -v
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Build
+          command: yarn build
+      - run:
+          name: Test
+          command: yarn ci:test
+      - run:
+          name: Post to GitHub
+          command: npx ci github-post
+
+  master:
+    <<: *container
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Versions
+          command: node -v && npm -v && yarn -v
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Build
+          command: yarn build
+      - run:
+          name: Test
+          command: yarn ci:test
+      - run:
+          name: Post to GitHub
+          command: npx ci github-post
+      - run:
+          name: Release
+          command: yarn release
+
+workflows:
+  version: 2
+  all:
+    jobs:
+      - all:
+          filters:
+            branches:
+              ignore:
+                - master
+  master:
+    jobs:
+      - master:
+          filters:
+            branches:
+              only: master
