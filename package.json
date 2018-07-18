@@ -14,7 +14,8 @@
     "test": "jest --no-cache",
     "test:coverage": "jest --no-cache --coverage",
     "test:watch": "jest --no-cache --watch",
-    "precommit": "pretty-quick --staged && yarn lint"
+    "precommit": "pretty-quick --staged && yarn lint",
+    "commitmsg": "commitlint -E GIT_PARAMS"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,8 @@
   },
   "homepage": "https://github.com/ThreadsStyling/json-patch-ot#readme",
   "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.1",
     "@threads/tslint": "^3.1.0",
     "@types/jest": "^23.1.5",
     "@types/node": "^10.5.2",
