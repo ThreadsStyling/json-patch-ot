@@ -49,6 +49,8 @@ export interface OperationTest extends OperationBase {
   value: any;
 }
 
+export type PathProp = 'path' | 'from';
+
 export type Operation =
   | OperationAdd
   | OperationRemove
@@ -57,7 +59,12 @@ export type Operation =
   | OperationMove
   | OperationTest;
 
-const shiftIndices = (acceptedOp: Operation, proposedOps: Operation[], isAdd = false, pathProp = 'path'): void => {
+const shiftIndices = (
+  acceptedOp: Operation,
+  proposedOps: Operation[],
+  isAdd = false,
+  pathProp: PathProp = 'path',
+): void => {
   const lastSlash = acceptedOp[pathProp].lastIndexOf('/');
 
   if (lastSlash === -1) return;
@@ -71,6 +78,8 @@ const shiftIndices = (acceptedOp: Operation, proposedOps: Operation[], isAdd = f
     const pathOfSameArray = proposedOp.path.indexOf(arrayPath) === 0;
 
     if (pathOfSameArray) {
+      // Does not use `pathProp` on the proposedOp since we need to deal with
+      // both path types on the proposedOp anyway. See below it deals with `from`.
       proposedOp.path = replacePathIndices(proposedOp.path, arrayPath, index, isAdd);
     }
 
@@ -92,7 +101,7 @@ const removeOperations = (
   proposedOps: Operation[],
   options: Options,
   skipWhitelist = false,
-  pathProp = 'path',
+  pathProp: PathProp = 'path',
 ): void => {
   const {acceptedWinsOnEqualPath} = options;
   let currentIndex = 0;
