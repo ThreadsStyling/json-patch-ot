@@ -8,9 +8,13 @@ Finally you can pass an options object which currently only supports one option.
 
 ## Example
 
+<!-- prettier-ignore-start -->
 ```js
 // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-const acceptedOps: Operation[] = [{op: OpType.remove, path: '/array/1'}, {op: OpType.add, path: '/array/3', value: 30}];
+const acceptedOps: Operation[] = [
+  {op: OpType.remove, path: '/array/1'},
+  {op: OpType.add, path: '/array/3', value: 30},
+];
 
 // [0, 2, 3, 30, 4, 5, 6]; <- Array after accepted add and remove
 
@@ -29,3 +33,4 @@ const result = JSONPatchOT(acceptedOps, proposedOps);
 //   {op: OpType.replace, path: '/array/5', value: 10}, <- unchanged
 // ]
 ```
+<!-- prettier-ignore-end -->
