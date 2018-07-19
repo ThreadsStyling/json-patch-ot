@@ -36,4 +36,27 @@ const result = JSONPatchOT(acceptedOps, proposedOps);
 // [0, 4, 3, 30, 4, 10, 6]; <- Array after transformed proposed changes
 
 ```
+
+## Options
+> `acceptedWinsOnEqualPath`
+
+For some operation types, the default behaviour is to overwrite if the proposed change has the same path as an accepted change. For example, below, without the option passed, the second replace in the proposedOps would not be remove. This is useful if you want proposed changes only to be able to change a path if they knew the value it had before. Note: `remove` ops in accepted changes always cause proposed operations with the same path to be deleted.
+
+```js
+const options = {acceptedWinsOnEqualPath: true};
+const acceptedOps: Operation[] = [
+  {op: OpType.replace, path: '/toreplace', value: 'new val'}
+];
+const proposedOps: Operation[] = [
+  {op: OpType.replace, path: '/some/other', value: 3},
+  {op: OpType.replace, path: '/toreplace', value: 'something else'},
+];
+
+const result = JSONPatchOT(acceptedOps, proposedOps);
+
+// result = [
+//   {op: OpType.replace, path: '/some/other', value: 3},
+//   // {op: OpType.replace, path: '/toreplace', value: 'something else'}, <- removed
+// ]
+```
 <!-- prettier-ignore-end -->
