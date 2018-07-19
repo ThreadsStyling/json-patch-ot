@@ -19,6 +19,9 @@ jobs:
           name: Versions
           command: node -v && npm -v && yarn -v
       - run:
+          name: NPM Auth
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+      - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
@@ -46,6 +49,9 @@ jobs:
       - run:
           name: Versions
           command: node -v && npm -v && yarn -v
+      - run:
+          name: NPM Auth
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
       - run:
           name: Install dependencies
           command: yarn install
