@@ -52,7 +52,7 @@ const proposedOps: Operation[] = [
   {op: OpType.replace, path: '/toreplace', value: 'something else'},
 ];
 
-const result = JSONPatchOT(acceptedOps, proposedOps);
+const result = JSONPatchOT(acceptedOps, proposedOps, options); // options passed here
 
 // result = [
 //   {op: OpType.replace, path: '/some/other', value: 3},
