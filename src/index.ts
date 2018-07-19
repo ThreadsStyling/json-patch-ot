@@ -1,3 +1,5 @@
+import {isValidIndex, replacePathIndices} from './utils';
+
 export interface Options {
   acceptedWinsOnEqualPath?: boolean;
 }
@@ -54,8 +56,6 @@ export type Operation =
   | OperationCopy
   | OperationMove
   | OperationTest;
-
-import {isValidIndex, replacePathIndices} from './utils';
 
 const shiftIndices = (acceptedOp: Operation, proposedOps: Operation[], isAdd = false, pathProp = 'path'): void => {
   const lastSlash = acceptedOp[pathProp].lastIndexOf('/');
@@ -140,11 +140,11 @@ const moveTransformer = (acceptedOp: Operation, proposedOps: Operation[], option
 };
 
 const transformAgainst = {
-  remove: removeTransformer,
-  replace: replaceTransformer,
-  add: addTransformer,
-  copy: addTransformer,
-  move: moveTransformer,
+  [OpType.remove]: removeTransformer,
+  [OpType.replace]: replaceTransformer,
+  [OpType.add]: addTransformer,
+  [OpType.copy]: addTransformer,
+  [OpType.move]: moveTransformer,
 };
 
 const reduceJSONPatches = (proposedOps: Operation[], acceptedOp: Operation, options: Options): Operation[] => {

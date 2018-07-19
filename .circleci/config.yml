@@ -34,9 +34,6 @@ jobs:
       - run:
           name: Test
           command: yarn ci:test
-      - run:
-          name: Post to GitHub
-          command: npx ci github-post
 
   master:
     <<: *container

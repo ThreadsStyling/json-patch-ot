@@ -32,5 +32,8 @@ const result = JSONPatchOT(acceptedOps, proposedOps);
 //   // {op: OpType.replace, path: '/array/1', value: 2}, <- removed
 //   {op: OpType.replace, path: '/array/5', value: 10}, <- unchanged
 // ]
+
+// [0, 4, 3, 30, 4, 10, 6]; <- Array after transformed proposed changes
+
 ```
 <!-- prettier-ignore-end -->
