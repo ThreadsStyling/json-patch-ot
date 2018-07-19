@@ -5,7 +5,6 @@
     "moduleResolution": "Node",
     "removeComments": true,
     "noImplicitAny": false,
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
