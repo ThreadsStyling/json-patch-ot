@@ -1,0 +1,426 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JSONPatchOT should work 1`] = `
+Array [
+  Object {
+    "op": "add",
+    "path": "/slides/6",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 6",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "6",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/6/caption",
+    "value": "slide 6 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/6/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-6.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/6/caption",
+    "value": "This is a nice caption for slide 6",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/7",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 7",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "7",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/7/caption",
+    "value": "slide 7 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/7/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-7.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/7/caption",
+    "value": "This is a nice caption for slide 7",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/8",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 8",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "8",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/8/caption",
+    "value": "slide 8 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/8/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-8.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/8/caption",
+    "value": "This is a nice caption for slide 8",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/9",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 9",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "9",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/9/caption",
+    "value": "slide 9 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/9/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-9.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/9/caption",
+    "value": "This is a nice caption for slide 9",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/10",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 10",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "10",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/10/caption",
+    "value": "slide 10 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/10/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-10.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/10/caption",
+    "value": "This is a nice caption for slide 10",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/11",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 11",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "11",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/11/caption",
+    "value": "slide 11 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/11/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-11.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/11/caption",
+    "value": "This is a nice caption for slide 11",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/12",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 12",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "12",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/12/caption",
+    "value": "slide 12 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/12/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-12.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/12/caption",
+    "value": "This is a nice caption for slide 12",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/13",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 13",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "13",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/13/caption",
+    "value": "slide 13 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/13/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-13.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/13/caption",
+    "value": "This is a nice caption for slide 13",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/14",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 14",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "14",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/14/caption",
+    "value": "slide 14 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/14/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-14.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/14/caption",
+    "value": "This is a nice caption for slide 14",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/15",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 15",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "15",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/15/caption",
+    "value": "slide 15 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/15/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-15.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/15/caption",
+    "value": "This is a nice caption for slide 15",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/16",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 16",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "16",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/16/caption",
+    "value": "slide 16 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/16/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-16.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/16/caption",
+    "value": "This is a nice caption for slide 16",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/17",
+    "value": Object {
+      "overlayOrder": Array [],
+      "overlays": Object {},
+      "title": "Slide 17",
+    },
+  },
+  Object {
+    "op": "add",
+    "path": "/slideOrder/-",
+    "value": "17",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/17/caption",
+    "value": "slide 17 caption",
+  },
+  Object {
+    "op": "add",
+    "path": "/slides/17/media",
+    "value": Object {
+      "format": "jpeg",
+      "height": 1000,
+      "size": 1234567,
+      "src": "http://www.yo.com/sample-slide-17.jpg",
+      "width": 1920,
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/slides/17/caption",
+    "value": "This is a nice caption for slide 17",
+  },
+]
+`;

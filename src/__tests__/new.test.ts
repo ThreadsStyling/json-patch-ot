@@ -283,4 +283,65 @@ describe('JSONPatchOT', () => {
 
     expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]); // all removed
   });
+
+  const getValidOperations = (slideNumber: number): Operation[] => [
+    {
+      op: OpType.add,
+      path: `/slides/${slideNumber}`,
+      value: {title: `Slide ${slideNumber}`, overlayOrder: [], overlays: {}},
+    },
+    {
+      op: OpType.add,
+      path: '/slideOrder/-',
+      value: String(slideNumber),
+    },
+    {
+      op: OpType.add,
+      path: `/slides/${slideNumber}/caption`,
+      value: `slide ${slideNumber} caption`,
+    },
+    {
+      op: OpType.add,
+      path: `/slides/${slideNumber}/media`,
+      value: {
+        src: `http://www.yo.com/sample-slide-${slideNumber}.jpg`,
+        width: 1920,
+        height: 1000,
+        format: 'jpeg',
+        size: 1234567,
+      },
+    },
+    {
+      op: OpType.replace,
+      path: `/slides/${slideNumber}/caption`,
+      value: `This is a nice caption for slide ${slideNumber}`,
+    },
+  ];
+
+  it('should work', () => {
+    const acceptedOps = [
+      ...getValidOperations(1),
+      ...getValidOperations(2),
+      ...getValidOperations(3),
+      ...getValidOperations(4),
+      ...getValidOperations(5),
+    ];
+
+    const proposedOps = [
+      ...getValidOperations(6),
+      ...getValidOperations(7),
+      ...getValidOperations(8),
+      ...getValidOperations(9),
+      ...getValidOperations(10),
+      ...getValidOperations(11),
+      ...getValidOperations(12),
+      ...getValidOperations(13),
+      ...getValidOperations(14),
+      ...getValidOperations(15),
+      ...getValidOperations(16),
+      ...getValidOperations(17),
+    ];
+
+    expect(JSONPatchOT(acceptedOps, proposedOps)).toMatchSnapshot(); // all removed
+  });
 });
