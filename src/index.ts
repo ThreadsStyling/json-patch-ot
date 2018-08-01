@@ -156,7 +156,7 @@ const transformAgainst = {
   [OpType.move]: moveTransformer,
 };
 
-const reduceJSONPatches = (proposedOps: Operation[], acceptedOp: Operation, options: Options): Operation[] => {
+const reduceJSONPatches = (options: Options) => (proposedOps: Operation[], acceptedOp: Operation): Operation[] => {
   const transformFunc = transformAgainst[acceptedOp.op];
 
   if (transformFunc) transformFunc(acceptedOp, proposedOps, options);
@@ -179,7 +179,5 @@ export default function JSONPatchOT(
 ): Operation[] {
   const clonedProposed = JSON.parse(JSON.stringify(proposedOps));
 
-  return acceptedOps.reduce((proposedOps, acceptedOp) => {
-    return reduceJSONPatches(proposedOps, acceptedOp, options);
-  }, clonedProposed);
+  return acceptedOps.reduce(reduceJSONPatches(options), clonedProposed);
 }
