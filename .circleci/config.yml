@@ -63,8 +63,10 @@ jobs:
           name: Test
           command: yarn ci:test
       - run:
-          name: Post to GitHub
-          command: npx ci github-post
+          name: Post status to GitHub
+          command: |
+              npx cross-ci :run \
+                  npx commit-status success Version "'\${BUILD_VERSION}'"
       - run:
           name: Release
           command: yarn release
