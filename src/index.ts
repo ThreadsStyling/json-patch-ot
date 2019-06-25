@@ -85,7 +85,6 @@ const shiftIndices = (
 
     const hasFromOp = proposedOp.op === OpType.move || proposedOp.op === OpType.copy ? proposedOp : null;
     const fromOfSameArray = hasFromOp && hasFromOp.from && hasFromOp.from.indexOf(arrayPath) === 0;
-
     if (hasFromOp && fromOfSameArray) {
       hasFromOp.from = replacePathIndices(hasFromOp.from, arrayPath, index, isAdd);
     }
@@ -137,15 +136,15 @@ const replaceTransformer = (acceptedOp: Operation, proposedOps: Operation[], opt
 };
 
 const addTransformer = (acceptedOp: Operation, proposedOps: Operation[], options: Options): void => {
-  removeOperations(acceptedOp, proposedOps, options);
   shiftIndices(acceptedOp, proposedOps, true);
+  removeOperations(acceptedOp, proposedOps, options);
 };
 
 const moveTransformer = (acceptedOp: Operation, proposedOps: Operation[], options: Options): void => {
   removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, true, 'from'); // like a remove
-  removeOperations(acceptedOp, proposedOps, options, false, 'path'); // like an add
-  shiftIndices(acceptedOp, proposedOps, true, 'path'); // like an add
   shiftIndices(acceptedOp, proposedOps, false, 'from'); // like a remove
+  shiftIndices(acceptedOp, proposedOps, true, 'path'); // like an add
+  removeOperations(acceptedOp, proposedOps, options, false, 'path'); // like an add
 };
 
 const transformAgainst = {
