@@ -141,6 +141,8 @@ const addTransformer = (acceptedOp: Operation, proposedOps: Operation[], options
 };
 
 const moveTransformer = (acceptedOp: Operation, proposedOps: Operation[], options: Options): void => {
+  // Special case for move. Change all values to new base `path` if base `from` has changed.
+
   removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, true, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, false, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, true, 'path'); // like an add
