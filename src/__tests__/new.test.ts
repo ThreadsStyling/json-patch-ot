@@ -383,22 +383,6 @@ describe('JSONPatchOT', () => {
         {op: OpType.replace, path: '/array/1/blah', value: 4},
       ]);
     });
-
-    it.skip('TO CONDSIDER: should handle update proposed path if it matched the from path of accepted move', () => {
-      // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-      const acceptedOps: Operation[] = [
-        {op: OpType.move, path: '/someval', from: '/array/5'}, // acts like a remove
-      ];
-
-      // [0, 1, 2, 3, 4, 6]; <- Array after accepted copies
-
-      // Actions to double some specific value
-      const proposedOps: Operation[] = [
-        {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
-      ];
-
-      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([{op: OpType.replace, path: '/someval', value: 10}]);
-    });
   });
 
   describe('against multiple', () => {
