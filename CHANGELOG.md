@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/ThreadsStyling/json-patch-ot/compare/v1.0.0...v1.0.1) (2019-06-28)
+
+
+### Bug Fixes
+
+* move bugs fixed and tests reordered ([8c89a21](https://github.com/ThreadsStyling/json-patch-ot/commit/8c89a21))
+* resolve move and add issues with replace ([54f22d2](https://github.com/ThreadsStyling/json-patch-ot/commit/54f22d2))
+
 # 1.0.0 (2018-07-19)
 
 
