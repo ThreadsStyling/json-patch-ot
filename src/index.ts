@@ -65,7 +65,7 @@ const shiftIndices = (
   isAdd = false,
   pathProp: PathProp = 'path',
 ): void => {
-  const lastSlash = acceptedOp[pathProp].lastIndexOf('/');
+  const lastSlash: number = acceptedOp[pathProp].lastIndexOf('/');
 
   if (lastSlash === -1) return;
 
@@ -111,10 +111,11 @@ const removeOperations = (
     proposedOp = proposedOps[currentIndex];
     const matchesFromToPath =
       proposedOp.from &&
-      (proposedOp.from === acceptedOp[pathProp] || proposedOp.from.indexOf(acceptedOp[pathProp] + '/') === 0);
+      (proposedOp.from === acceptedOp[pathProp] ||
+        proposedOp.from.indexOf((acceptedOp[pathProp] as string) + '/') === 0);
     const matchesPathToPath =
       (acceptedWinsOnEqualPath && acceptedOp[pathProp] === proposedOp.path) ||
-      proposedOp.path.indexOf(acceptedOp[pathProp] + '/') === 0;
+      proposedOp.path.indexOf((acceptedOp[pathProp] as string) + '/') === 0;
     const shouldSkip = skipWhitelist ? allowWhitelist(acceptedOp, proposedOp) : false;
 
     if (!shouldSkip && (matchesFromToPath || matchesPathToPath)) {
