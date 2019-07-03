@@ -35,6 +35,11 @@
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-7.0.1.tgz#276977f8ee60d8c56d7fdd43296af76dfee9b5f7"
 
+"@commitlint/config-conventional@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-8.0.0.tgz#f45349cab9dcfc08a30fbcf2b6317506e17bc8e6"
+  integrity sha512-umg1irroowOV+x8oZPBw8woCogZO5MFKUYQq+fRZvhowoSwDHXYILP3ETcdHUgvytw/K/a8Xvu7iCypK6oZQ+g==
+
 "@commitlint/ensure@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@commitlint/ensure/-/ensure-7.0.0.tgz#3d5210bb988416844926895a782a55815731779d"
@@ -263,12 +268,12 @@
     into-stream "^3.1.0"
     lodash "^4.17.4"
 
-"@threads/tslint@^4.3.0":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@threads/tslint/-/tslint-4.3.0.tgz#e0a0231fb8cadf35d9b53f6b32decdafe030d5bd"
-  integrity sha512-mel1h72rrsDFYb6yoqXvPB8yi0suTr8108RorNv5KancF4uUnFEgPkwnm6U7eY45jCMPuW+ae0/bcYu3CotgoA==
+"@threads/tsconfig@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@threads/tsconfig/-/tsconfig-1.0.0.tgz#60c5b742854fa874b9a6b442bae2ed4379fe6084"
+  integrity sha512-jmbq25ycCz+aVpYylQKoBe8gvgvXxjVPhIaFgd3C2GHmZ4xa31pDGFnXfQrQfIQ7eddvm4LV5fSP8EPnIX1dxQ==
   dependencies:
-    tslint-react "^3.6.0"
+    "@commitlint/config-conventional" "^8.0.0"
 
 "@types/jest@^23.1.5":
   version "23.3.0"
@@ -4386,12 +4391,6 @@ tslib@^1.8.0, tslib@^1.8.1:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
-tslint-react@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/tslint-react/-/tslint-react-3.6.0.tgz#7f462c95c4a0afaae82507f06517ff02942196a1"
-  dependencies:
-    tsutils "^2.13.1"
-
 tslint@^5.10.0:
   version "5.11.0"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.11.0.tgz#98f30c02eae3cde7006201e4c33cb08b48581eed"
@@ -4409,7 +4408,7 @@ tslint@^5.10.0:
     tslib "^1.8.0"
     tsutils "^2.27.2"
 
-tsutils@^2.13.1, tsutils@^2.27.2:
+tsutils@^2.27.2:
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-2.28.0.tgz#6bd71e160828f9d019b6f4e844742228f85169a1"
   dependencies:

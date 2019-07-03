@@ -1,9 +1,3 @@
 {
-  "extends": ["@threads/tslint"],
-  "linterOptions": {
-    "exclude": ["coverage/", "dist/", "node_modules/"]
-  },
-  "rules": {
-    "curly": false
-  }
+  "extends": ["@threads/tsconfig/tslint"]
 }
