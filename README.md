@@ -60,3 +60,15 @@ const result = JSONPatchOT(acceptedOps, proposedOps, options); // options passed
 // ]
 ```
 <!-- prettier-ignore-end -->
+
+## Acknowledgements
+
+Thanks to Palindrom's [JSON-Patch-OT](https://github.com/Palindrom/JSON-Patch-OT/) lib which this was originally built off.
+
+## License
+
+MIT
+
+## Work in progress
+
+**Please note:** This is a work in progress. You are free to use it how you like, but be aware that you do so at your own risk.
