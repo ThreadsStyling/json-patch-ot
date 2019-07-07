@@ -63,7 +63,7 @@ const result = JSONPatchOT(acceptedOps, proposedOps, options); // options passed
 
 ## Acknowledgements
 
-Thanks to Palindrom's [JSON-Patch-OT](https://github.com/Palindrom/JSON-Patch-OT/) lib which this was originally built off.
+Thanks to Palindrom's [JSON-Patch-OT](https://github.com/Palindrom/JSON-Patch-OT/) lib which this was originally built upon.
 
 ## License
 
