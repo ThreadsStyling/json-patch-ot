@@ -6,6 +6,8 @@ You must pass the function a list of JSON patches that you want to transform aga
 
 Finally you can pass an options object which currently only supports one option. The `acceptedWinsOnEqualPath` option will decide if new `replace` operations should override an accepted `replace` that was made to the exact same `path`.
 
+**Note:** This project only exposes commonjs es2018 modules. 
+
 ## Example
 
 <!-- prettier-ignore-start -->
