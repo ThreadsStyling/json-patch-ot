@@ -45,9 +45,6 @@
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
-    "@semantic-release/changelog": "^3.0.0",
-    "@semantic-release/git": "^7.0.0",
-    "@semantic-release/npm": "^4.0.0",
     "@threads/tsconfig": "^1.0.0",
     "@types/jest": "^23.1.5",
     "@types/node": "^10.5.2",
@@ -74,17 +71,5 @@
     },
     "transformIgnorePatterns": [],
     "testRegex": ".*/__tests__/.*\\.(test|spec)\\.ts$"
-  },
-  "release": {
-    "verifyConditions": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git"
-    ],
-    "prepare": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git"
-    ]
   }
 }
