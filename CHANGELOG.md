@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/ThreadsStyling/json-patch-ot/compare/v1.0.1...v1.1.0) (2019-07-08)
+
+
+### Features
+
+* prepping for public release ([#11](https://github.com/ThreadsStyling/json-patch-ot/issues/11)) ([7827cdb](https://github.com/ThreadsStyling/json-patch-ot/commit/7827cdb))
+
 ## [1.0.1](https://github.com/ThreadsStyling/json-patch-ot/compare/v1.0.0...v1.0.1) (2019-06-28)
 
 
