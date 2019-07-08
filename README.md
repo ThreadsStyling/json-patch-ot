@@ -12,6 +12,8 @@ Finally you can pass an options object which currently only supports one option.
 
 <!-- prettier-ignore-start -->
 ```js
+import jsonPatchOT, { Operation } from "@threads/json-patch-ot";
+
 // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
 const acceptedOps: Operation[] = [
   {op: OpType.remove, path: '/array/1'},
@@ -45,6 +47,8 @@ const result = JSONPatchOT(acceptedOps, proposedOps);
 For some operation types, the default behaviour is to overwrite if the proposed change has the same path as an accepted change. For example, below, without the option passed, the second replace in the proposedOps would not be remove. This is useful if you want proposed changes only to be able to change a path if they knew the value it had before. Note: `remove` ops in accepted changes always cause proposed operations with the same path to be deleted.
 
 ```js
+import jsonPatchOT, { Operation } from "@threads/json-patch-ot";
+
 const options = {acceptedWinsOnEqualPath: true};
 const acceptedOps: Operation[] = [
   {op: OpType.replace, path: '/toreplace', value: 'new val'}
