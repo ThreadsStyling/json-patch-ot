@@ -22,7 +22,7 @@
     "prettier:diff": "prettier --list-different 'src/**/*.{ts,tsx,js,jsx,json}'",
     "ci:test": "yarn prettier:diff && yarn lint && yarn test",
     "lint": "yarn tslint",
-    "tslint": "tslint './src/**/*.{ts,tsx}' -t verbose",
+    "tslint": "tslint './src/**/*.{ts,tsx}' -t verbose -p .",
     "commitmsg": "commitlint -E GIT_PARAMS"
   },
   "repository": {
@@ -48,7 +48,7 @@
     "@semantic-release/changelog": "^3.0.0",
     "@semantic-release/git": "^7.0.0",
     "@semantic-release/npm": "^4.0.0",
-    "@threads/tslint": "^3.1.0",
+    "@threads/tsconfig": "^1.0.0",
     "@types/jest": "^23.1.5",
     "@types/node": "^10.5.2",
     "commit-status": "^4.3.0",
@@ -61,7 +61,7 @@
     "semantic-release": "^15.8.1",
     "ts-jest": "^23.0.0",
     "tslint": "^5.10.0",
-    "typescript": "^2.9.2"
+    "typescript": "^3.5.2"
   },
   "dependencies": {},
   "jest": {

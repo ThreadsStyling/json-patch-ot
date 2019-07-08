@@ -1,32 +1,7 @@
 {
+  "extends": "@threads/tsconfig",
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "moduleResolution": "Node",
-    "removeComments": true,
-    "noImplicitAny": false,
-    "allowSyntheticDefaultImports": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "pretty": true,
-    "sourceMap": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "outDir": "lib",
-    "forceConsistentCasingInFileNames": true,
-    "noEmitHelpers": true,
-    "noEmitOnError": true,
-    "noErrorTruncation": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "declaration": true,
-    "lib": ["es2018"]
+    "outDir": "lib"
   },
-  "include": ["src"],
-  "typeRoots": ["./node_modules/@types", "./typings"],
-  "exclude": ["node_modules", "lib", "src/__tests__", "src/**/__tests__/**/*.*", "*.test.ts"]
+  "include": ["src"]
 }

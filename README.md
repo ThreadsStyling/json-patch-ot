@@ -6,10 +6,14 @@ You must pass the function a list of JSON patches that you want to transform aga
 
 Finally you can pass an options object which currently only supports one option. The `acceptedWinsOnEqualPath` option will decide if new `replace` operations should override an accepted `replace` that was made to the exact same `path`.
 
+**Note:** This project only exposes commonjs es2018 modules. 
+
 ## Example
 
 <!-- prettier-ignore-start -->
 ```js
+import jsonPatchOT, { Operation } from "@threads/json-patch-ot";
+
 // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
 const acceptedOps: Operation[] = [
   {op: OpType.remove, path: '/array/1'},
@@ -43,6 +47,8 @@ const result = JSONPatchOT(acceptedOps, proposedOps);
 For some operation types, the default behaviour is to overwrite if the proposed change has the same path as an accepted change. For example, below, without the option passed, the second replace in the proposedOps would not be remove. This is useful if you want proposed changes only to be able to change a path if they knew the value it had before. Note: `remove` ops in accepted changes always cause proposed operations with the same path to be deleted.
 
 ```js
+import jsonPatchOT, { Operation } from "@threads/json-patch-ot";
+
 const options = {acceptedWinsOnEqualPath: true};
 const acceptedOps: Operation[] = [
   {op: OpType.replace, path: '/toreplace', value: 'new val'}
@@ -60,3 +66,15 @@ const result = JSONPatchOT(acceptedOps, proposedOps, options); // options passed
 // ]
 ```
 <!-- prettier-ignore-end -->
+
+## Acknowledgements
+
+Thanks to Palindrom's [JSON-Patch-OT](https://github.com/Palindrom/JSON-Patch-OT/) lib which this was originally built upon.
+
+## License
+
+MIT
+
+## Work in progress
+
+**Please note:** This is a work in progress. You are free to use it how you like, but be aware that you do so at your own risk.

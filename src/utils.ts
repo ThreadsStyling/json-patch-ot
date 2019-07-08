@@ -17,7 +17,7 @@ export function replacePathIndices(path: string, arrayPath: string, index: strin
   const shouldChangeIndex = isValidIndex(oldIndex) && isOldBigger;
 
   if (shouldChangeIndex) {
-    return arrayPath + (parseInt(oldIndex, 10) + (incUp ? 1 : -1)) + rest;
+    return `${arrayPath}${parseInt(oldIndex, 10) + (incUp ? 1 : -1)}${rest}`;
   } else {
     return path;
   }
