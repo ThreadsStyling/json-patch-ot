@@ -1,5 +1,7 @@
 # json-patch-ot (beta)
 
+[![CircleCI](https://circleci.com/gh/ThreadsStyling/json-patch-ot.svg?style=svg)](https://circleci.com/gh/ThreadsStyling/json-patch-ot) ![npm](https://img.shields.io/npm/v/@threads/json-patch-ot.svg) ![Codacy coverage](https://img.shields.io/codacy/coverage/bd5a046e57a9460c913872fff42f6913.svg)
+
 Library to reconcile JSON patch changes using Operational Transformation
 
 You must pass the function a list of JSON patches that you want to transform against. These should be your accepted changes that are already accepted by the server, but were not known about at the creation of the second argument, the proposed changes.
