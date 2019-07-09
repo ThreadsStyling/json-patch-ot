@@ -4,12 +4,7 @@
   "description": "Library to reconcile JSON patch changes using Operational Transformation",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/ThreadsStyling/json-patch-ot/blob/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "files": [
     "lib/"
   ],
@@ -43,7 +38,6 @@
     "transformation"
   ],
   "author": "jasoniangreen@gmail.com",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/ThreadsStyling/json-patch-ot/issues"
   },
