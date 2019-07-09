@@ -1,6 +1,6 @@
 # json-patch-ot (beta)
 
-[![CircleCI](https://circleci.com/gh/ThreadsStyling/json-patch-ot.svg?style=svg)](https://circleci.com/gh/ThreadsStyling/json-patch-ot) ![npm](https://img.shields.io/npm/v/@threads/json-patch-ot.svg) ![Codacy coverage](https://img.shields.io/codacy/coverage/bd5a046e57a9460c913872fff42f6913.svg)
+[![CircleCI](https://circleci.com/gh/ThreadsStyling/json-patch-ot.svg?style=svg)](https://circleci.com/gh/ThreadsStyling/json-patch-ot) ![npm](https://img.shields.io/npm/v/@threads/json-patch-ot.svg) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/ef50eb32caf14e689783144b2394184d)](https://www.codacy.com/app/jasoniangreen/json-patch-ot?utm_source=github.com&utm_medium=referral&utm_content=ThreadsStyling/json-patch-ot&utm_campaign=Badge_Coverage) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ef50eb32caf14e689783144b2394184d)](https://www.codacy.com/app/jasoniangreen/json-patch-ot?utm_source=github.com&utm_medium=referral&utm_content=ThreadsStyling/json-patch-ot&utm_campaign=Badge_Grade)
 
 Library to reconcile JSON patch changes using Operational Transformation
 
