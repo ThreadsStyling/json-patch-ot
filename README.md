@@ -1,4 +1,4 @@
-# json-patch-ot
+# json-patch-ot (beta)
 
 Library to reconcile JSON patch changes using Operational Transformation
 
@@ -6,7 +6,7 @@ You must pass the function a list of JSON patches that you want to transform aga
 
 Finally you can pass an options object which currently only supports one option. The `acceptedWinsOnEqualPath` option will decide if new `replace` operations should override an accepted `replace` that was made to the exact same `path`.
 
-**Note:** This project only exposes commonjs es2018 modules. 
+**Note:** This project only exposes commonjs es2018 modules.
 
 ## Example
 
@@ -70,6 +70,13 @@ const result = JSONPatchOT(acceptedOps, proposedOps, options); // options passed
 ## Acknowledgements
 
 Thanks to Palindrom's [JSON-Patch-OT](https://github.com/Palindrom/JSON-Patch-OT/) lib which this was originally built upon.
+
+The reasons we built a new library, rather than contributing back to the one by Palindrom were:
+
+1.  Palindrom obviously needed only a subset of the functionality of JSON Patch as large areas were not implemented. Transforming operations against an `add` to an array, or a `move` into an array are just some of the cases that were not covered at all.
+2.  Merging back changes into a lib for a framework that didn't need those changes was always going to be awkward. We needed to move fast.
+3.  We wanted to write the whole thing in TypeScript to give us a safer more stable core lib.
+4.  There hadn't been much activity on the lib in a while when we were looking at it.
 
 ## License
 
