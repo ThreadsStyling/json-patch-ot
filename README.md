@@ -49,8 +49,9 @@ const result = JSONPatchOT(acceptedOps, proposedOps);
 
 ## Example project
 
-This example project implements a simple http server supporting a shared state managed with json-patch-ot. 
 The [Book Catalogue](https://github.com/ThreadsStyling/json-patch-ot-example) is a great way to understand how this library works.
+
+This example project implements a simple http server supporting a shared state managed with json-patch-ot.
 
 ## Options
 > `acceptedWinsOnEqualPath`
