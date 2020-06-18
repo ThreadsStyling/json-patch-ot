@@ -209,10 +209,10 @@ const copyTransformer = (acceptedOp: OperationCopy, proposedOps: Operation[], op
 
 const moveTransformer = (acceptedOp: OperationMove, proposedOps: Operation[], options: Options): void => {
   redirectPaths(acceptedOp, proposedOps);
-  removeOperations(acceptedOp, proposedOps, options, true, 'from'); // like a remove
+  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, true, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, false, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, true, 'path'); // like an add
-  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, false, 'path'); // like an add
+  removeOperations(acceptedOp, proposedOps, options, false, 'path'); // like an add
   removeRedirectedFlag(proposedOps);
 };
 
