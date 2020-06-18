@@ -276,14 +276,30 @@ describe('JSONPatchOT', () => {
         {op: OpType.replace, path: '/rows/5/columns/0/modules/2', value: 'Hello'},
       ]);
     });
-    //
-    // fit('should redirect to a moved key within a subpath after consecutive moves', () => {
-    //   const acceptedOps: Operation[] = [{op: OpType.move, from: '/array/6', path: '/array/0'}];
-    //
-    //   const proposedOps: Operation[] = [{op: OpType.move, from: '/array/4', path: '/array/6'}];
-    //
-    //   expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]);
-    // });
+
+    it('redirect higher level paths after moving lower levels (moving to front)', () => {
+      const acceptedOps: Operation[] = [{op: OpType.move, from: '/rows/6', path: '/rows/0'}];
+
+      const proposedOps: Operation[] = [
+        {op: OpType.move, from: '/rows/4/columns/0/modules/2', path: '/rows/6/columns/0/modules/1'},
+      ];
+
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+        {op: OpType.move, from: '/rows/5/columns/0/modules/2', path: '/rows/0/columns/0/modules/1'},
+      ]);
+    });
+
+    it('redirect higher level paths after moving lower levels (moving to back)', () => {
+      const acceptedOps: Operation[] = [{op: OpType.move, from: '/rows/0', path: '/rows/6'}];
+
+      const proposedOps: Operation[] = [
+        {op: OpType.move, from: '/rows/4/columns/0/modules/2', path: '/rows/0/columns/0/modules/1'},
+      ];
+
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+        {op: OpType.move, from: '/rows/3/columns/0/modules/2', path: '/rows/6/columns/0/modules/1'},
+      ]);
+    });
 
     it('should transpose array index with accepted moves into array', () => {
       // [0, 1, 2, 3, 4, 5, 6]; <- Starting array

@@ -77,13 +77,9 @@ function shiftIndices<T extends Operation>(
   if (!isValidIndex(index)) return;
 
   for (const proposedOp of proposedOps) {
-    if (proposedOp.redirected) {
-      continue;
-    }
-
     const pathOfSameArray = proposedOp.path.indexOf(arrayPath) === 0;
 
-    if (pathOfSameArray) {
+    if (!proposedOp.redirected && pathOfSameArray) {
       // Does not use `pathProp` on the proposedOp since we need to deal with
       // both path types on the proposedOp anyway. See below it deals with `from`.
       proposedOp.path = replacePathIndices(proposedOp.path, arrayPath, index, isAdd);
@@ -173,11 +169,15 @@ function redirectPaths(acceptedOp: OperationMove, proposedOps: Operation[]): voi
     if (!isProposedOpFrom && matchesPathToFrom) {
       proposedOp.path = acceptedPath + proposedOp.path.substr(acceptedFrom.length);
       proposedOp.redirected = true;
-    } else if (isProposedOpFrom && matchesFromToFrom) {
+    } else if (isProposedOpFrom) {
       const proposedFromOp = proposedOp as FromOperation;
-      proposedFromOp.from = acceptedPath + proposedFromOp.from.substr(acceptedFrom.length);
-      proposedFromOp.redirected = true;
-    } else if (isProposedOpFrom && matchesPathToFrom) {
+      if (matchesFromToFrom) {
+        proposedFromOp.from = acceptedPath + proposedFromOp.from.substr(acceptedFrom.length);
+        proposedFromOp.redirected = true;
+      } else if (matchesPathToFrom) {
+        proposedOp.path = acceptedPath + proposedOp.path.substr(acceptedFrom.length);
+        proposedFromOp.redirected = true;
+      }
     }
   }
 }
