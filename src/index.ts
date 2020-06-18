@@ -16,6 +16,7 @@ export enum OpType {
 export interface OperationBase {
   id?: number;
   path: string;
+  redirected?: boolean;
 }
 
 export interface OperationAdd extends OperationBase {
@@ -76,6 +77,10 @@ function shiftIndices<T extends Operation>(
   if (!isValidIndex(index)) return;
 
   for (const proposedOp of proposedOps) {
+    if (proposedOp.redirected) {
+      continue;
+    }
+
     const pathOfSameArray = proposedOp.path.indexOf(arrayPath) === 0;
 
     if (pathOfSameArray) {
@@ -140,7 +145,7 @@ function removeOperations<T extends Operation>(
       (acceptedWinsOnEqualPath && acceptedPath === proposedOp.path) ||
       proposedOp.path.indexOf(`${acceptedPath}/`) === 0;
 
-    const shouldSkip = skipWhitelist ? allowWhitelist(acceptedOp, proposedOp) : false;
+    const shouldSkip = proposedOp.redirected || (skipWhitelist ? allowWhitelist(acceptedOp, proposedOp) : false);
 
     if (!shouldSkip && (matchesFromToPath || matchesPathToPath)) {
       proposedOps.splice(currentIndex, 1);
@@ -149,6 +154,37 @@ function removeOperations<T extends Operation>(
 
     currentIndex++;
   }
+}
+
+function redirectPaths(acceptedOp: OperationMove, proposedOps: Operation[]): void {
+  const acceptedFrom = acceptedOp.from;
+  const acceptedPath = acceptedOp.path;
+
+  for (const proposedOp of proposedOps) {
+    const matchesPathToFrom = proposedOp.path === acceptedFrom || proposedOp.path.indexOf(acceptedFrom + '/') === 0;
+
+    let matchesFromToFrom = false;
+    if (isFromOperation(proposedOp)) {
+      matchesFromToFrom = proposedOp.from === acceptedFrom || proposedOp.from.indexOf(acceptedFrom + '/') === 0;
+    }
+
+    const isProposedOpFrom = isFromOperation(proposedOp);
+
+    if (!isProposedOpFrom && matchesPathToFrom) {
+      proposedOp.path = acceptedPath + proposedOp.path.substr(acceptedFrom.length);
+      proposedOp.redirected = true;
+    } else if (isProposedOpFrom && matchesFromToFrom) {
+      const proposedFromOp = proposedOp as FromOperation;
+      proposedFromOp.from = acceptedPath + proposedFromOp.from.substr(acceptedFrom.length);
+      proposedFromOp.redirected = true;
+    }
+  }
+}
+
+function removeRedirectedFlag(proposedOps: Operation[]): void {
+  proposedOps.forEach((op) => {
+    delete op.redirected;
+  });
 }
 
 const removeTransformer = (acceptedOp: OperationRemove, proposedOps: Operation[]): void => {
@@ -170,11 +206,13 @@ const copyTransformer = (acceptedOp: OperationCopy, proposedOps: Operation[], op
   removeOperations(acceptedOp, proposedOps, options);
 };
 
-const moveTransformer = (acceptedOp: OperationMove, proposedOps: Operation[], options: Options): void => {
+const moveTransformer = (acceptedOp: OperationMove, proposedOps: Operation[]): void => {
+  redirectPaths(acceptedOp, proposedOps);
   removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, true, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, false, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, true, 'path'); // like an add
-  removeOperations(acceptedOp, proposedOps, options, false, 'path'); // like an add
+  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, false, 'path'); // like an add
+  removeRedirectedFlag(proposedOps);
 };
 
 const transformAgainst = {

@@ -31,7 +31,10 @@ describe('JSONPatchOT', () => {
     });
 
     it('should transpose array indices', () => {
-      const acceptedOps: Operation[] = [{op: OpType.remove, path: '/array/3'}, {op: OpType.remove, path: '/array/5'}];
+      const acceptedOps: Operation[] = [
+        {op: OpType.remove, path: '/array/3'},
+        {op: OpType.remove, path: '/array/5'},
+      ];
       const proposedOps: Operation[] = [
         {op: OpType.replace, path: '/array/4', value: 'change name'},
         {op: OpType.replace, path: '/array/7', value: 'change name'},
@@ -189,20 +192,40 @@ describe('JSONPatchOT', () => {
   });
 
   describe('against move', () => {
-    it('should transpose array index with accepted moves out of array', () => {
-      // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-      const acceptedOps: Operation[] = [
-        {op: OpType.move, path: '/someval', from: '/array/5'}, // acts like a remove
-      ];
+    it('should redirect to moved key', () => {
+      const acceptedOps: Operation[] = [{op: OpType.move, path: '/someval', from: '/array/5'}];
 
-      // [0, 1, 2, 3, 4, 6]; <- Array after accepted copies
-
-      // Actions to double some specific value
       const proposedOps: Operation[] = [
         {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
       ];
 
-      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]);
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([{op: OpType.replace, path: '/someval', value: 10}]);
+    });
+
+    it('should redirect to a moved key within a subpath', () => {
+      const acceptedOps: Operation[] = [{op: OpType.move, path: '/rows/5', from: '/rows/0'}];
+
+      const proposedOps: Operation[] = [{op: OpType.replace, path: '/rows/0/columns/0/modules/2', value: 'Hello'}];
+
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+        {op: OpType.replace, path: '/rows/5/columns/0/modules/2', value: 'Hello'},
+      ]);
+    });
+
+    it('should redirect to a moved key within a subpath after consecutive moves', () => {
+      const acceptedOps: Operation[] = [
+        {op: OpType.move, path: '/rows/1', from: '/rows/0'},
+        {op: OpType.move, path: '/rows/2', from: '/rows/1'},
+        {op: OpType.move, path: '/rows/3', from: '/rows/2'},
+        {op: OpType.move, path: '/rows/4', from: '/rows/3'},
+        {op: OpType.move, path: '/rows/5', from: '/rows/4'},
+      ];
+
+      const proposedOps: Operation[] = [{op: OpType.replace, path: '/rows/0/columns/0/modules/2', value: 'Hello'}];
+
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+        {op: OpType.replace, path: '/rows/5/columns/0/modules/2', value: 'Hello'},
+      ]);
     });
 
     it('should transpose array index with accepted moves into array', () => {
@@ -242,7 +265,7 @@ describe('JSONPatchOT', () => {
         {op: OpType.replace, path: '/array/1', value: 2}, // <- unchanged
         {op: OpType.replace, path: '/array/4/title', value: 6},
         {op: OpType.replace, path: '/array/5', value: 8},
-        // {op: OpType.replace, path: '/array/5', value: 10}, <- removed
+        {op: OpType.replace, path: '/array/3', value: 10}, // <- 3 -> 10 instead of 5 -> 10
         {op: OpType.replace, path: '/array/6', value: 12}, // <- unchanged
       ]);
     });
@@ -272,130 +295,119 @@ describe('JSONPatchOT', () => {
         {op: OpType.replace, path: '/array/3', value: 4}, // 3 -> 6
         {op: OpType.replace, path: '/array/4', value: 6},
         {op: OpType.replace, path: '/array/5', value: 8},
-        // {op: OpType.replace, path: '/array/5', value: 10}, <- removed
+        {op: OpType.replace, path: '/array/2', value: 10}, // 5 -> 10 to 2 -> 10
         {op: OpType.replace, path: '/array/6', value: 12}, // <- unchanged
       ]);
     });
 
-    describe('with acceptedWinsOnEqualPath', () => {
-      it('should transpose array index during a swap/move', () => {
-        const options = {acceptedWinsOnEqualPath: true};
+    it('should transpose array index during a swap/move', () => {
+      // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+      const acceptedOps: Operation[] = [
+        {op: OpType.move, path: '/array/3', from: '/array/2'}, // a swap
+      ];
+      // [0, 1, 3, 2, 4, 5, 6]; <- Array after accepted copies
 
-        // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-        const acceptedOps: Operation[] = [
-          {op: OpType.move, path: '/array/3', from: '/array/2'}, // a swap
-        ];
-        // [0, 1, 3, 2, 4, 5, 6]; <- Array after accepted copies
+      // Actions to double some specific values
+      const proposedOps: Operation[] = [
+        {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
+      ];
 
-        // Actions to double some specific values
-        const proposedOps: Operation[] = [
-          {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
-        ];
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([{op: OpType.replace, path: '/array/2', value: 6}]);
+    });
 
-        expect(JSONPatchOT(acceptedOps, proposedOps, options)).toEqual([
-          {op: OpType.replace, path: '/array/2', value: 6},
-        ]);
-      });
+    it('should transpose array indices with accepted moves within an array', () => {
+      const options = {acceptedWinsOnEqualPath: true};
 
-      it('should transpose array indices with accepted moves within an array', () => {
-        const options = {acceptedWinsOnEqualPath: true};
+      // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+      const acceptedOps: Operation[] = [
+        {op: OpType.move, path: '/array/3', from: '/array/5'}, // acts like an add and remove
+      ];
 
-        // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-        const acceptedOps: Operation[] = [
-          {op: OpType.move, path: '/array/3', from: '/array/5'}, // acts like an add and remove
-        ];
+      // [0, 1, 2, 5, 3, 4, 6]; <- Array after accepted copies
 
-        // [0, 1, 2, 5, 3, 4, 6]; <- Array after accepted copies
+      // Actions to double some specific values
+      const proposedOps: Operation[] = [
+        {op: OpType.replace, path: '/array/1', value: 2}, // 1 -> 2
+        {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
+        {op: OpType.replace, path: '/array/4', value: 8}, // 4 -> 8
+        {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
+        {op: OpType.replace, path: '/array/6', value: 12}, // 6 -> 12
+      ];
 
-        // Actions to double some specific values
-        const proposedOps: Operation[] = [
-          {op: OpType.replace, path: '/array/1', value: 2}, // 1 -> 2
-          {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
-          {op: OpType.replace, path: '/array/4', value: 8}, // 4 -> 8
-          {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
-          {op: OpType.replace, path: '/array/6', value: 12}, // 6 -> 12
-        ];
+      expect(JSONPatchOT(acceptedOps, proposedOps, options)).toEqual([
+        {op: OpType.replace, path: '/array/1', value: 2}, // <- unchanged
+        {op: OpType.replace, path: '/array/4', value: 6},
+        {op: OpType.replace, path: '/array/5', value: 8},
+        {op: OpType.replace, path: '/array/3', value: 10}, // 5 -> 10 to 3-> 10
+        {op: OpType.replace, path: '/array/6', value: 12}, // <- unchanged
+      ]);
+    });
 
-        expect(JSONPatchOT(acceptedOps, proposedOps, options)).toEqual([
-          {op: OpType.replace, path: '/array/1', value: 2}, // <- unchanged
-          {op: OpType.replace, path: '/array/4', value: 6},
-          {op: OpType.replace, path: '/array/5', value: 8},
-          // {op: OpType.replace, path: '/array/5', value: 10}, <- removed
-          {op: OpType.replace, path: '/array/6', value: 12}, // <- unchanged
-        ]);
-      });
+    it('should transpose array indices with consecutive backward accepted moves within an array', () => {
+      // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+      const acceptedOps: Operation[] = [
+        {op: OpType.move, path: '/array/4', from: '/array/5'},
+        {op: OpType.move, path: '/array/3', from: '/array/4'},
+        {op: OpType.move, path: '/array/2', from: '/array/3'},
+      ];
 
-      it('should transpose array indices with consecutive backward accepted moves within an array', () => {
-        const options = {acceptedWinsOnEqualPath: true};
-        // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-        const acceptedOps: Operation[] = [
-          {op: OpType.move, path: '/array/4', from: '/array/5'},
-          {op: OpType.move, path: '/array/3', from: '/array/4'},
-          {op: OpType.move, path: '/array/2', from: '/array/3'},
-        ];
+      // [0, 1, 5, 2, 3, 4, 6]; <- Array after accepted copies
 
-        // [0, 1, 5, 2, 3, 4, 6]; <- Array after accepted copies
+      // Actions to double some specific values
+      const proposedOps: Operation[] = [
+        {op: OpType.replace, path: '/array/1', value: 2}, // 1 -> 2
+        {op: OpType.replace, path: '/array/2', value: 4}, // 3 -> 6
+        {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
+        {op: OpType.replace, path: '/array/4', value: 8}, // 4 -> 8
+        {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
+        {op: OpType.replace, path: '/array/6', value: 12}, // 6 -> 12
+      ];
 
-        // Actions to double some specific values
-        const proposedOps: Operation[] = [
-          {op: OpType.replace, path: '/array/1', value: 2}, // 1 -> 2
-          {op: OpType.replace, path: '/array/2', value: 4}, // 3 -> 6
-          {op: OpType.replace, path: '/array/3', value: 6}, // 3 -> 6
-          {op: OpType.replace, path: '/array/4', value: 8}, // 4 -> 8
-          {op: OpType.replace, path: '/array/5', value: 10}, // 5 -> 10
-          {op: OpType.replace, path: '/array/6', value: 12}, // 6 -> 12
-        ];
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+        {op: OpType.replace, path: '/array/1', value: 2}, // <- unchanged
+        {op: OpType.replace, path: '/array/3', value: 4}, // 3 -> 6
+        {op: OpType.replace, path: '/array/4', value: 6},
+        {op: OpType.replace, path: '/array/5', value: 8},
+        {op: OpType.replace, path: '/array/2', value: 10}, // 5 -> 10 to 2 -> 10
+        {op: OpType.replace, path: '/array/6', value: 12}, // <- unchanged
+      ]);
+    });
 
-        expect(JSONPatchOT(acceptedOps, proposedOps, options)).toEqual([
-          {op: OpType.replace, path: '/array/1', value: 2}, // <- unchanged
-          {op: OpType.replace, path: '/array/3', value: 4}, // 3 -> 6
-          {op: OpType.replace, path: '/array/4', value: 6},
-          {op: OpType.replace, path: '/array/5', value: 8},
-          // {op: OpType.replace, path: '/array/5', value: 10}, <- removed
-          {op: OpType.replace, path: '/array/6', value: 12}, // <- unchanged
-        ]);
-      });
+    it('should transpose array index and sub property with consecutive accepted moves within an array', () => {
+      // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+      const acceptedOps: Operation[] = [
+        {op: OpType.move, path: '/array/4', from: '/array/5'},
+        {op: OpType.move, path: '/array/3', from: '/array/4'},
+        {op: OpType.move, path: '/array/2', from: '/array/3'},
+      ];
 
-      it('should transpose array index and sub property with consecutive accepted moves within an array', () => {
-        const options = {acceptedWinsOnEqualPath: true};
-        // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-        const acceptedOps: Operation[] = [
-          {op: OpType.move, path: '/array/4', from: '/array/5'},
-          {op: OpType.move, path: '/array/3', from: '/array/4'},
-          {op: OpType.move, path: '/array/2', from: '/array/3'},
-        ];
+      // [0, 1, 5, 2, 3, 4, 6]; <- Array after accepted copies
 
-        // [0, 1, 5, 2, 3, 4, 6]; <- Array after accepted copies
+      // Actions to double some specific values
+      const proposedOps: Operation[] = [
+        {op: OpType.replace, path: '/array/4/title', value: 'wow'}, // sub property
+      ];
 
-        // Actions to double some specific values
-        const proposedOps: Operation[] = [
-          {op: OpType.replace, path: '/array/4/title', value: 'wow'}, // sub property
-        ];
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+        {op: OpType.replace, path: '/array/5/title', value: 'wow'},
+      ]);
+    });
 
-        expect(JSONPatchOT(acceptedOps, proposedOps, options)).toEqual([
-          {op: OpType.replace, path: '/array/5/title', value: 'wow'},
-        ]);
-      });
+    it('should transpose array index with consecutive forward accepted moves within an array', () => {
+      // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
+      const acceptedOps: Operation[] = [
+        {op: OpType.move, path: '/array/1', from: '/array/0'},
+        {op: OpType.move, path: '/array/2', from: '/array/1'},
+        {op: OpType.move, path: '/array/3', from: '/array/2'},
+        {op: OpType.move, path: '/array/4', from: '/array/3'},
+      ];
 
-      it('should transpose array index with consecutive forward accepted moves within an array', () => {
-        const options = {acceptedWinsOnEqualPath: true};
-        // [0, 1, 2, 3, 4, 5, 6]; <- Starting array
-        const acceptedOps: Operation[] = [
-          {op: OpType.move, path: '/array/1', from: '/array/0'},
-          {op: OpType.move, path: '/array/2', from: '/array/1'},
-          {op: OpType.move, path: '/array/3', from: '/array/2'},
-          {op: OpType.move, path: '/array/4', from: '/array/3'},
-        ];
+      // [1, 2, 3, 4, 0, 5, 6]; <- Array after accepted copies
 
-        // [1, 2, 3, 4, 0, 5, 6]; <- Array after accepted copies
+      // Actions to double some specific values
+      const proposedOps: Operation[] = [{op: OpType.replace, path: '/array/2/blah', value: 4}];
 
-        // Actions to double some specific values
-        const proposedOps: Operation[] = [{op: OpType.replace, path: '/array/2/blah', value: 4}];
-
-        expect(JSONPatchOT(acceptedOps, proposedOps, options)).toEqual([
-          {op: OpType.replace, path: '/array/1/blah', value: 4},
-        ]);
-      });
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([{op: OpType.replace, path: '/array/1/blah', value: 4}]);
     });
   });
 
@@ -473,7 +485,7 @@ describe('JSONPatchOT', () => {
       ]);
     });
 
-    it('should cancel move and copy operations given different conflicts', () => {
+    it('should redirect or cancel move and copy operations given different conflicts', () => {
       const acceptedOps: Operation[] = [
         {op: OpType.move, from: '/one/path', path: '/one/where'},
         {op: OpType.move, from: '/two/where', path: '/two/path'},
@@ -491,7 +503,10 @@ describe('JSONPatchOT', () => {
         {op: OpType.move, from: '/something/else', path: '/three/path'},
       ];
 
-      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([]); // all removed
+      expect(JSONPatchOT(acceptedOps, proposedOps)).toEqual([
+        {op: OpType.copy, from: '/one/where', path: '/to/path'},
+        {op: OpType.move, from: '/one/where', path: '/another/path'},
+      ]);
     });
   });
 });
