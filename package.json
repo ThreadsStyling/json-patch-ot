@@ -1,6 +1,6 @@
 {
-  "name": "@threads/json-patch-ot",
-  "version": "1.1.0",
+  "name": "@salsita/json-patch-ot",
+  "version": "1.1.1",
   "description": "Library to reconcile JSON patch changes using Operational Transformation",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
