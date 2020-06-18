@@ -177,6 +177,7 @@ function redirectPaths(acceptedOp: OperationMove, proposedOps: Operation[]): voi
       const proposedFromOp = proposedOp as FromOperation;
       proposedFromOp.from = acceptedPath + proposedFromOp.from.substr(acceptedFrom.length);
       proposedFromOp.redirected = true;
+    } else if (isProposedOpFrom && matchesPathToFrom) {
     }
   }
 }
@@ -206,9 +207,9 @@ const copyTransformer = (acceptedOp: OperationCopy, proposedOps: Operation[], op
   removeOperations(acceptedOp, proposedOps, options);
 };
 
-const moveTransformer = (acceptedOp: OperationMove, proposedOps: Operation[]): void => {
+const moveTransformer = (acceptedOp: OperationMove, proposedOps: Operation[], options: Options): void => {
   redirectPaths(acceptedOp, proposedOps);
-  removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, true, 'from'); // like a remove
+  removeOperations(acceptedOp, proposedOps, options, true, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, false, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, true, 'path'); // like an add
   removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, false, 'path'); // like an add
