@@ -77,6 +77,23 @@ const result = JSONPatchOT(acceptedOps, proposedOps, options); // options passed
 //   // {op: OpType.replace, path: '/toreplace', value: 'something else'}, <- removed
 // ]
 ```
+
+> `redirectOnMove`
+
+By default accepted move operations cancel proposed operations that are targeting elements within their `from` path. In the example below, without the option passed, the proposed replace operation would be discarded. By using `redirectOnMove` the proposed operation will be kept and applied to the moved element on its new path instead.
+```js
+import jsonPatchOT, { Operation } from "@threads/json-patch-ot";
+
+const options = {redirectOnMove: true};
+const acceptedOps: Operation[] = [{op: OpType.move, from: '/frompath', path: '/topath'}];
+const proposedOps: Operation[] = [{op: OpType.replace, path: '/frompath', value: 10}];
+
+const result = JSONPatchOT(acceptedOps, proposedOps, options); // options passed here
+
+// result = [
+//   {op: OpType.replace, path: '/topath', value: 10},
+// ]
+```
 <!-- prettier-ignore-end -->
 
 ## Acknowledgements

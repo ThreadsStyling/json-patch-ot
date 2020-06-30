@@ -2,6 +2,7 @@ import {isValidIndex, replacePathIndices} from './utils';
 
 export interface Options {
   acceptedWinsOnEqualPath?: boolean;
+  redirectOnMove?: boolean;
 }
 
 export enum OpType {
@@ -208,12 +209,16 @@ const copyTransformer = (acceptedOp: OperationCopy, proposedOps: Operation[], op
 };
 
 const moveTransformer = (acceptedOp: OperationMove, proposedOps: Operation[], options: Options): void => {
-  redirectPaths(acceptedOp, proposedOps);
+  if (options.redirectOnMove) {
+    redirectPaths(acceptedOp, proposedOps);
+  }
   removeOperations(acceptedOp, proposedOps, {acceptedWinsOnEqualPath: true}, true, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, false, 'from'); // like a remove
   shiftIndices(acceptedOp, proposedOps, true, 'path'); // like an add
   removeOperations(acceptedOp, proposedOps, options, false, 'path'); // like an add
-  removeRedirectedFlag(proposedOps);
+  if (options.redirectOnMove) {
+    removeRedirectedFlag(proposedOps);
+  }
 };
 
 const transformAgainst = {
