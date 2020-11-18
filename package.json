@@ -56,7 +56,7 @@
     "prettier": "^1.13.7",
     "pretty-quick": "^1.6.0",
     "rimraf": "^2.6.2",
-    "semantic-release": "^15.8.1",
+    "semantic-release": "^17.2.3",
     "ts-jest": "^23.0.0",
     "tslint": "^5.10.0",
     "typescript": "^3.5.2"
